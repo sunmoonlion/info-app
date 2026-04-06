@@ -1,0 +1,9 @@
+[submodule "investment-admin-frontend"]
+	path = investment-admin-frontend
+	url = https://gitee.com/sunmoonlion/investment-admin-frontend.git
+[submodule "investment-app-backend"]
+	path = investment-app-backend
+	url = https://gitee.com/sunmoonlion/investment-app-backend.git
+[submodule "investment-app-frontend"]
+	path = investment-app-frontend
+	url = https://gitee.com/sunmoonlion/investment-app-frontend.git
