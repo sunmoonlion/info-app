@@ -3,7 +3,7 @@
 	url = https://gitee.com/sunmoonlion/investment-admin-frontend.git
 [submodule "investment-web-backend"]
 	path = investment-web-backend
-	url = https://gitee.com/sunmoonlion/investment-app-backend.git
+	url = https://gitee.com/sunmoonlion/investment-web-backend.git
 [submodule "investment-web-frontend"]
 	path = investment-web-frontend
-	url = https://gitee.com/sunmoonlion/investment-app-frontend.git
+	url = https://gitee.com/sunmoonlion/investment-web-frontend.git
