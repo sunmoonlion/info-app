@@ -17,29 +17,29 @@
 
 ---
 
-## DEC-002：认证统一使用 Casdoor OIDC，不自建
+## DEC-002：{{认证方案选择}}
 
 - 日期：YYYY-MM-DD
 - 状态：Accepted
 
-**决策**：所有业务应用接入 Casdoor 作为统一认证中心，不在业务后端自建 JWT 签发逻辑。
+**决策**：{{e.g. 使用 Casdoor OIDC 作为统一认证中心 / 自建 JWT / 使用第三方 Auth 服务}}
 
-**原因**：平台统一认证，避免各应用各自维护 auth 孤岛；Casdoor 支持标准 OIDC/OAuth2，生态成熟。
+**原因**：{{为什么选择这种方案，而不是其他方案}}
 
-**影响**：业务后端只做 token 验证（通过 session_id 查 Redis），不负责登录流程。
+**影响**：{{对业务前后端的影响，e.g. 后端只需验证 token，不负责登录流程}}
 
 ---
 
-## DEC-003：Token 存储采用 HTTP-only Cookie + Redis Session
+## DEC-003：{{Token / Session 存储方式}}
 
 - 日期：YYYY-MM-DD
 - 状态：Accepted
 
-**决策**：access_token 存储在服务端 Redis，客户端只持有 `session_id`（HTTP-only Cookie），不直接暴露 token。
+**决策**：{{e.g. HTTP-only Cookie + Redis Session / localStorage + Bearer Token / ...}}
 
-**原因**：防止 XSS 窃取 token；服务端可随时吊销 session，安全可控。
+**原因**：{{安全性、可控性等考量}}
 
-**影响**：需要 Redis；BFF 或后端必须实现 session 管理逻辑。
+**影响**：{{对前端存储、后端依赖的影响}}
 
 ---
 

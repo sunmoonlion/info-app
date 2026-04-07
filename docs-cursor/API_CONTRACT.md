@@ -8,7 +8,7 @@
 ## 约定
 
 - Base URL：`{{API_BASE_URL}}`，e.g. `http://localhost:8000`
-- 认证：HTTP-only Cookie `session_id`
+- 认证：{{e.g. `Authorization: Bearer <token>` / HTTP-only Cookie `session_id`}}
 - 响应格式：`{ "code": 0, "message": "ok", "data": {...} }`
 - 错误响应：`{ "code": <非0>, "message": "<错误描述>" }`
 
@@ -16,15 +16,17 @@
 
 ## 认证模块
 
-### GET /auth/login
-重定向到 Casdoor 授权页。
+> 根据实际认证方案填写。以下为 OIDC BFF 模式的示例，可替换为其他方案。
 
-**响应**：302 → Casdoor authorize URL
+### GET /auth/login
+发起登录（跳转 OIDC 授权页 / 返回登录表单等，视方案而定）。
+
+**响应**：{{302 → 授权页 / 200 + 登录表单}}
 
 ---
 
 ### GET /auth/callback
-OIDC 回调，交换 code 获取 token，写入 session。
+认证回调，处理 code 换 token。（仅 OIDC 模式需要）
 
 **Query 参数**：`code` string 必填
 
@@ -33,7 +35,7 @@ OIDC 回调，交换 code 获取 token，写入 session。
 ---
 
 ### GET /auth/logout
-清除 session，退出登录。
+退出登录，清除 session / token。
 
 **响应**：302 → `/login`
 

@@ -16,11 +16,13 @@
 
 ## 基础设施
 
+> 按项目实际使用的服务填写，删除不需要的行。
+
 | 服务 | 地址 | 说明 |
 |------|------|------|
-| PostgreSQL | `host:port` | 数据库 |
-| Redis | `host:port` | Session / 缓存 |
-| Casdoor | `https://...` | OIDC 认证中心 |
+| {{数据库，e.g. PostgreSQL / MySQL}} | `host:port` | 数据库 |
+| {{缓存，e.g. Redis}} | `host:port` | Session / 缓存（如有） |
+| {{认证，e.g. Casdoor / Auth0}} | `https://...` | OIDC 认证中心（如有） |
 
 ---
 
@@ -51,16 +53,16 @@ REDIS_URL=redis://:password@host:port/0
 
 ```bash
 cd {{backend-repo}}/app
-cp .env.example .env          # 填写实际值
-uv sync
-alembic upgrade head
-uvicorn app.main:app --reload --port 8000
+cp .env.example .env            # 填写实际值
+{{uv sync / pip install -r requirements.txt / npm install}}
+{{alembic upgrade head}}        # 数据库迁移（如使用 alembic）
+{{uvicorn app.main:app --reload --port 8000 / node dist/main.js}}
 ```
 
 关键环境变量（`.env`）：
 
 ```env
-DATABASE_URL=postgresql+asyncpg://user:pass@host:port/dbname
+DATABASE_URL={{postgresql+asyncpg / mysql+aiomysql / ...}}://user:pass@host:port/dbname
 REDIS_URL=redis://:password@host:port/0
 CASDOOR_ENDPOINT=https://...
 CASDOOR_CLIENT_ID=...

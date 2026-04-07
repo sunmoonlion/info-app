@@ -18,11 +18,13 @@
 
 ## 基础设施
 
+> 按项目实际使用的服务填写，删除不需要的行。
+
 | 服务 | 地址 | 认证 | 说明 |
 |------|------|------|------|
-| PostgreSQL | `host:port` | user / pass | 数据库 |
-| Redis | `host:port` | 密码 | Session / 缓存 |
-| Casdoor | `https://...` | client_id / secret | OIDC 认证中心 |
+| {{数据库，e.g. PostgreSQL / MySQL}} | `host:port` | user / pass | 数据库 |
+| {{缓存，e.g. Redis}} | `host:port` | 密码 | Session / 缓存（如有） |
+| {{认证，e.g. Casdoor / Auth0}} | `https://...` | client_id / secret | OIDC 认证中心（如有） |
 
 ---
 
@@ -52,16 +54,16 @@ REDIS_URL=redis://:password@host:port/0
 
 ```bash
 cd {{backend-repo}}/app
-cp .env.example .env          # 填写实际值
-uv sync                       # 安装依赖（或 pip install -r requirements.txt）
-alembic upgrade head          # 数据库迁移
-uvicorn app.main:app --reload --port 8000
+cp .env.example .env              # 填写实际值
+{{uv sync / pip install -r requirements.txt / npm install}}
+{{alembic upgrade head}}          # 数据库迁移（如使用 alembic）
+{{uvicorn app.main:app --reload --port 8000 / node dist/main.js}}
 ```
 
 关键环境变量（`.env`）：
 
 ```env
-DATABASE_URL=postgresql+asyncpg://user:pass@host:port/dbname
+DATABASE_URL={{postgresql+asyncpg / mysql+aiomysql / ...}}://user:pass@host:port/dbname
 REDIS_URL=redis://:password@host:port/0
 CASDOOR_ENDPOINT=https://...
 CASDOOR_CLIENT_ID=...
@@ -82,8 +84,10 @@ curl http://localhost:8000/health   # 后端健康检查
 
 ## 启动顺序
 
-1. 数据库（PostgreSQL）
-2. Redis
+> 按项目实际依赖调整。
+
+1. 数据库
+2. 缓存（如有）
 3. 后端 API
 4. 前端
 

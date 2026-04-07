@@ -10,10 +10,10 @@
 ### 1.1 启动顺序
 
 ```bash
-# 1. 数据库
+# 1. 数据库（按实际使用的数据库替换）
 docker start postgres   # 或系统服务
 
-# 2. Redis
+# 2. 缓存（如有）
 docker start redis      # 或系统服务
 
 # 3. 后端
@@ -36,23 +36,25 @@ curl http://localhost:8000/health
 
 ## 二、数据库操作
 
+> 以下以 alembic（Python）为例，其他迁移工具（TypeORM / Prisma / Flyway）按需替换。
+
 ### 运行迁移
 
 ```bash
 cd {{backend-repo}}/app
-alembic upgrade head
+{{alembic upgrade head / npx prisma migrate deploy / ...}}
 ```
 
 ### 回滚一步
 
 ```bash
-alembic downgrade -1
+{{alembic downgrade -1 / ...}}
 ```
 
 ### 查看当前版本
 
 ```bash
-alembic current
+{{alembic current / ...}}
 ```
 
 ---
@@ -90,18 +92,20 @@ taskkill /PID <pid> /F
 
 ---
 
-## 四、Casdoor 配置
+## 四、认证配置排查
+
+> 根据实际认证方案填写。以下为 OIDC 模式示例。
 
 ### 确认 redirect_uri 配置正确
 
-在 Casdoor 管理界面 → 应用 → 回调地址，确保包含：
+在 OIDC Provider 管理界面，确保回调地址包含：
 - 本地：`http://localhost:3000/api/auth/callback`（或后端 callback 地址）
 - 生产：`https://{{your-domain}}/api/auth/callback`
 
 ### 测试登录流程
 
 ```bash
-# 访问 BFF 登录入口，观察是否正确跳转 Casdoor
+# 访问登录入口，观察是否正确跳转授权页
 curl -v http://localhost:8000/auth/login
 # 或前端 BFF
 curl -v http://localhost:3000/api/auth/login
