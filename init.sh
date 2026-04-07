@@ -50,6 +50,27 @@ for dir in tpl-admin-frontend tpl-web-backend tpl-web-frontend tpl-admin-backend
   echo "    done: $dir"
 done
 
+# 1b. 替换父仓根目录文件中的 tpl → app-name（README、.mdc 规则、CLAUDE.md 等）
+echo ">>> [1b/4] 替换父仓根目录文件..."
+find "$SCRIPT_DIR" -maxdepth 2 -type f \
+  ! -path "*/.git" \
+  ! -path "*/.git/*" \
+  ! -path "*/tpl-*/*" \
+  ! -name "*.lock" \
+  ! -name "pnpm-lock.yaml" \
+  ! -name "CHANGELOG.md" \
+  ! -name "init.sh" \
+  | while read -r file; do
+      if grep -qE 'tpl|TPL|Tpl' "$file" 2>/dev/null; then
+        sed -i \
+          -e "s/TPL/${APP_NAME^^}/g" \
+          -e "s/Tpl/${APP_NAME^}/g" \
+          -e "s/tpl/${APP_NAME}/g" \
+          "$file"
+      fi
+    done
+echo "    done: 父仓根目录"
+
 # 2. 更新 .gitmodules
 echo ">>> [2/4] 更新 .gitmodules..."
 cat > "$SCRIPT_DIR/.gitmodules" <<EOF
