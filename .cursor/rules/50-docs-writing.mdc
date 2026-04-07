@@ -1,0 +1,15 @@
+---
+description: 文档编写与维护（Cursor / Claude 双文档树）
+globs: docs-cursor/**/*.md, docs-claude/**/*.md
+alwaysApply: false
+---
+
+# 文档编写规则
+
+- 文档先写结论，再写背景与细节，确保可快速扫描。
+- 每份文档宜包含「最后更新日期」和当前状态（生效中/草稿/待评审）。
+- 流程类文档必须可执行：包含输入、步骤、输出或验收标准。
+- 模板类文档必须提供可复用占位符，不写一次性临时说明。
+- **Cursor 侧**变更同步 `docs-cursor/CHANGELOG.md`（若存在）。
+- **Claude Code 侧**变更同步 `docs-claude/CHANGELOG.md`（若存在）。
+- 路线/决策/风险变更时，同步更新 ROADMAP、DECISION_LOG、RISK_REGISTER 等对应条目。

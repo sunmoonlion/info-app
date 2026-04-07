@@ -2,6 +2,17 @@
 
 > 这不是规则列表，而是帮助我理解这个项目、做出好判断的上下文。
 
+## Cursor 与 Claude 的分工
+
+| 用途 | 位置 | 说明 |
+|------|------|------|
+| **Cursor 编辑器** | `.cursor/rules/*.mdc` | 按 `globs` / `alwaysApply` 注入的**规则**（编码风格、交付流程、按子模块的技术约定）。 |
+| **Claude Code** | 本文件 + `docs-claude/` | **项目叙事与接力**：当前目标、接口约定索引、会话交接，不是逐条「lint 规则」。 |
+
+从单业务仓（例如旧 `toutiao`）迁到本模板时：**把原 `.cursor/rules/*.mdc` 里仍适用的条目合并进上述规则文件**，不必保留业务专属路径（如单一 `toutiao-app-backend`）；本模板用 `*admin-backend` / `*web-frontend` 等 glob 覆盖初始化前后的目录名。
+
+---
+
 ## 项目是什么
 
 {{简要描述：这是什么应用，业务目标是什么}}
@@ -70,4 +81,5 @@
 
 ## 文档在哪
 
-`docs-claude/INDEX.md` — 所有文档的导航入口
+- **Claude Code**：`docs-claude/INDEX.md` — 文档导航入口
+- **Cursor / 团队协作**：`docs-cursor/INDEX.md` — 与 `docs-claude` 平行，按工具选用
