@@ -9,6 +9,7 @@
 #
 # 效果:
 #   - 在四个子模块内将 tpl / Tpl / TPL 替换为 <app-name>
+#   - 在父仓根目录（maxdepth 含 .cursor/rules/、docs-* 等，排除四个 tpl-* 子模块）再替换一轮
 #   - 重命名四个子模块目录，并修正各子模块 .git 指针
 #   - 更新 .gitmodules 中的远程 URL
 #   - 完成后需手动将父目录 tpl-app 重命名为 <app-name>-app
@@ -52,7 +53,8 @@ done
 
 # 1b. 替换父仓根目录文件中的 tpl → app-name（README、.mdc 规则、CLAUDE.md 等）
 echo ">>> [1b/4] 替换父仓根目录文件..."
-find "$SCRIPT_DIR" -maxdepth 2 -type f \
+# maxdepth 需 ≥3，否则扫不到 .cursor/rules/*.mdc（三层路径：.cursor/rules/文件）
+find "$SCRIPT_DIR" -maxdepth 4 -type f \
   ! -path "*/.git" \
   ! -path "*/.git/*" \
   ! -path "*/tpl-*/*" \
