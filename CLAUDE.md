@@ -7,7 +7,7 @@
 {{简要描述：这是什么应用，业务目标是什么}}
 
 **技术栈**：
-- 前端：{{e.g. Next.js 15 / Nuxt 3}}
+- 前端：{{e.g. Next.js 16 / Nuxt 3}}
 - 后端：{{e.g. FastAPI / NestJS}}
 - 认证：{{e.g. Casdoor OIDC}}
 

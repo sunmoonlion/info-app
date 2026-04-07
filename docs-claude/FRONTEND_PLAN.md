@@ -6,7 +6,7 @@
 
 ## 技术栈
 
-- 框架：{{Next.js 15 / Nuxt 3 / Vue 3 + Vite}}
+- 框架：{{Next.js 16 / Nuxt 3 / Vue 3 + Vite}}
 - UI 库：{{shadcn/ui / Element Plus / ...}}
 - 状态管理：{{Zustand / Pinia}}
 - HTTP 客户端：{{axios / ky}}

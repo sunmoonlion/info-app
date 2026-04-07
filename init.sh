@@ -8,10 +8,10 @@
 #   ./init.sh investment sunmoonlion
 #
 # 效果:
-#   - 将所有文件中的 tpl / Tpl / TPL 替换为 <app-name>
-#   - 重命名三个子模块目录
+#   - 在四个子模块内将 tpl / Tpl / TPL 替换为 <app-name>
+#   - 重命名四个子模块目录，并修正各子模块 .git 指针
 #   - 更新 .gitmodules 中的远程 URL
-#   - 重命名父目录
+#   - 完成后需手动将父目录 tpl-app 重命名为 <app-name>-app
 
 set -e
 
@@ -29,7 +29,7 @@ cd "$SCRIPT_DIR"
 
 echo ">>> 初始化项目: $APP_NAME (Gitee 用户: $GITEE_USER)"
 
-# 1. 替换三个子模块内部文件中的 tpl → app-name
+# 1. 替换四个子模块内部文件中的 tpl → app-name
 echo ">>> [1/4] 替换子模块内部文件..."
 for dir in tpl-admin-frontend tpl-web-backend tpl-web-frontend tpl-admin-backend; do
   find "$SCRIPT_DIR/$dir" -type f \
@@ -52,8 +52,6 @@ done
 
 # 2. 更新 .gitmodules
 echo ">>> [2/4] 更新 .gitmodules..."
-APP_UPPER="${APP_NAME^^}"
-APP_TITLE="${APP_NAME^}"
 cat > "$SCRIPT_DIR/.gitmodules" <<EOF
 [submodule "${APP_NAME}-admin-frontend"]
 	path = ${APP_NAME}-admin-frontend

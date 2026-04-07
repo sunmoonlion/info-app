@@ -1,6 +1,9 @@
 # tpl-app
 
+
 通用应用模板，包含四个子模块，用于快速初始化新项目。
+
+<!-- synced with init.sh + web-frontend Next standalone -->
 
 ## 仓库结构
 
@@ -12,7 +15,7 @@ tpl-app/
 ├── docs-cursor/             # Cursor 文档体系模板
 ├── tpl-admin-frontend/      # 管理后台前端（Vue 3 + Vite，CSR）
 ├── tpl-admin-backend/       # 管理后台后端（FastAPI + SQLAlchemy）
-├── tpl-web-frontend/        # 用户端前端（Next.js 15，SSR）
+├── tpl-web-frontend/        # 用户端前端（Next.js 16，SSR）
 └── tpl-web-backend/         # 用户端 BFF 后端（NestJS + TypeScript）
 ```
 
@@ -22,7 +25,7 @@ tpl-app/
 |--------|--------|------|
 | tpl-admin-frontend | Vue 3 + Vite | 管理后台，CSR 模式 |
 | tpl-admin-backend | FastAPI + Python 3.12 | 管理后台后端，DDD 架构，Casdoor BFF 认证 |
-| tpl-web-frontend | Next.js 15 + shadcn/ui | 用户端前端，SSR 模式，Casdoor BFF 认证 |
+| tpl-web-frontend | Next.js 16 + shadcn/ui | 用户端前端，SSR 模式，Casdoor BFF 认证 |
 | tpl-web-backend | NestJS + TypeScript | 用户端 BFF 后端，Casdoor OIDC 对接 |
 
 ## 组合方式
@@ -61,7 +64,7 @@ bash init.sh investment sunmoonlion
 
 脚本会自动完成：
 - 将四个子模块内所有文件中的 `tpl` / `Tpl` / `TPL` 替换为项目名
-- 重命名四个子模块目录
+- 重命名四个子模块目录，并修正各子模块 `.git` 指针
 - 更新 `.gitmodules` 中的远程 URL
 
 ### 3. 重命名父目录
