@@ -39,8 +39,82 @@ tpl-app/
 ```
 
 BFF 认证说明：
-- 用户端前端（Next.js）内置 BFF（`/api/auth/`），可单独对接 Casdoor，无需 `tpl-web-backend`
-- 若前端不带 BFF（纯 CSR），则由对应后端负责 Casdoor 对接
+- 当前建议采用「后端 BFF 统一对接 Casdoor」模式：
+  - `tpl-web-frontend` 跳转到 `tpl-web-backend /auth/login`
+  - `tpl-admin-frontend` 跳转到 `tpl-admin-backend /auth/login`
+  - 前端不直接对接 Casdoor token 交换流程
+
+## 当前认证与权限架构（已落地）
+
+本仓库当前以 **Casdoor 为唯一身份源**，目标是：
+- 用户注册/创建在 Casdoor 完成
+- 登录与会话由后端 BFF 处理
+- 接口级权限由 Casdoor token 声明驱动
+- 本地用户表仅做影子同步（映射/业务扩展），不是认证权威
+
+### 1) `tpl-web-backend`（NestJS）
+
+已完成：
+- `/auth/login|callback|logout|me` Casdoor OIDC 链路
+- `JwtGuard` 从 `session_id` 读取 Redis 会话
+- `RolePermissionGuard` 改为读取 `req.user.casdoorPermissions`
+- `AuthService` 从 `id_token` 解析 claims，并组装 `username` + `casdoorPermissions`
+- 登录回调后自动 upsert 本地 `users`（影子同步）
+- 禁用手工创建用户：`POST /user` 返回 `410 Gone`
+- 去除本地密码认证链路（不再用于本地登录）
+
+说明：
+- 权限字符串需要与后端装饰器拼接一致（如 `user:read`）
+- 若 token 中给到 `*`，可作为全量放行（仅建议测试/过渡）
+
+### 2) `tpl-admin-backend`（FastAPI）
+
+已完成：
+- 仅保留 `/auth/login|callback|logout|me`
+- 登录回调后自动解析 `id_token` 并 upsert 本地 `users`（影子同步）
+- 字段同步：`username`、`casdoor_sub`、`email`、`full_name`
+- 仍由 Casdoor 负责认证与权限权威
+
+### 3) 影子同步原则
+
+影子表用途：
+- 业务关联（外键/展示）
+- 审计快照
+- 本地扩展字段
+
+非用途：
+- 不做登录密码校验
+- 不作为权限权威（权限以 Casdoor 为准）
+
+### 4) Casdoor 配置要求
+
+必须保证：
+- `CASDOOR_REDIRECT_URI` 与后端回调地址完全一致
+- token 中可解析出后端需要的权限声明
+- 权限命名与后端一致（`resource:action`）
+
+当前后端会从以下 claims 字段提取权限：
+- `permissions`
+- `permission`
+- `roles`
+- `role`
+
+### 5) 子模块拉取注意事项
+
+首次建议：
+
+```bash
+git clone --recurse-submodules https://gitee.com/sunmoonlion/tpl-app.git
+```
+
+已有仓库更新：
+
+```bash
+git pull
+git submodule update --init --recursive
+```
+
+若出现 `not our ref`，通常是父仓库记录的子模块提交在子仓远程不存在，需要修复子模块指针或恢复对应提交。
 
 ## 使用方法
 
