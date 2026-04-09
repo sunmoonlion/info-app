@@ -99,17 +99,67 @@ BFF 认证说明：
 - `roles`
 - `role`
 
-### 5) 子模块拉取注意事项
+### 5) 子模块协作（推送 / 拉取）
 
-首次建议：
+**口诀：推送先子后父，拉取先父后子。**
+
+#### 推送建议（先子后父）
+
+无论在父仓库还是任一子仓库里改了代码，若要把结果同步到远程协作，都应：
+
+1. 在**涉及改动的子模块目录**内：`git add` → `git commit` → `git push`（每个动过的子模块各做一遍）。
+2. 回到**父仓库根目录**（如 `tpl-app`）：`git add` → `git commit` → `git push`，把子模块目录在父仓库里记录的**提交指针**一并推上去。
+
+父仓库只记录各子模块**目录**对应哪一个提交，不会跟踪子模块内部的源码文件。暂存指针时可用 `git add <子模块目录>` 只更新某一个子模块；若图省事、且 `git status` 确认没有误纳入其它改动，也可在父根直接 `git add .`（会同时暂存父仓库自己的文件与已变化的子模块指针）。
+
+**父仓库里 `git add` 举例**（均在父仓库根目录执行）：
+
+| 场景 | 常用命令 |
+|------|----------|
+| 只把「某子模块」更新后的指针写进父仓库 | `git add tpl-admin-frontend`（目录名即 `.gitmodules` 里的 `path`） |
+| 只提交父仓库自己的文件（如改了 `README.md`） | `git add README.md`，或确定没有其它暂存需求时用 `git add .` |
+| 既改了 `README.md`，又在子模块里 `push` 了新提交，要一次提交父仓库 | `git add .`（会暂存 `README.md` + 各子模块目录的指针变化） |
+| 只想提交父文件、**不要**顺带更新某个子模块指针 | 不要用 `.`，改为 `git add README.md` 等具体路径 |
+
+注意：子模块**内部的**源码改动，只能在**进入该子模块目录后**用 `git add` / `commit`，不要在父仓库里对 `tpl-xxx/src/...` 单独 `add`。
+
+**命令示例**（假设父仓库根目录名为 `tpl-app`）：
+
+```bash
+# 例 1：只更新「管理端前端」子模块指针（子模块里已 commit + push 完毕）
+cd tpl-app
+git add tpl-admin-frontend
+git commit -m "chore: bump tpl-admin-frontend"
+git push origin master
+
+# 例 2：图省事——父仓库里改了 README，且一个或多个子模块指针也变过，一起在父仓库提交
+cd tpl-app
+git status    # 确认暂存范围
+git add .
+git commit -m "docs: 更新说明并同步子模块指针"
+git push origin master
+
+# 例 3：只提交父仓库文件，不动任何子模块指针（不要用 git add .）
+cd tpl-app
+git add README.md
+git commit -m "docs: 修订 README"
+git push origin master
+```
+
+#### 拉取建议（先父后子）
+
+先在本仓库**根目录** `git pull`，拿到父仓库最新提交（含子模块指针变更），再执行子模块初始化/更新，与远程对齐。
+
+**首次克隆**（本地还没有本仓库时，一次拉齐父仓库 + 所有子模块）：
 
 ```bash
 git clone --recurse-submodules https://gitee.com/sunmoonlion/tpl-app.git
 ```
 
-已有仓库更新：
+**后续更新**（本地已有父仓库，只同步远程最新代码时）：
 
 ```bash
+cd <父仓库根目录>   # 例如 tpl-app
 git pull
 git submodule update --init --recursive
 ```
