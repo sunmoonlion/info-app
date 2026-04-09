@@ -146,6 +146,34 @@ git commit -m "docs: 修订 README"
 git push origin master
 ```
 
+#### 状态查看（父仓库 + 所有子模块一次看全）
+
+在父仓库根目录可直接执行（按你使用的终端选择）：
+
+```bash
+# PowerShell（Windows，兼容 PowerShell 5）
+git status --short; git submodule foreach --recursive "git status --short"
+
+# bash / zsh / Git Bash
+git status --short && git submodule foreach --recursive 'git status --short'
+```
+
+若你希望长期使用一条短命令，可配置 alias：
+
+```bash
+# 仅当前仓库生效（推荐）
+git config alias.allstatus '!git status --short; git submodule foreach --recursive "git status --short"'
+
+# 若想全局生效（当前用户所有仓库）
+git config --global alias.allstatus '!git status --short; git submodule foreach --recursive "git status --short"'
+```
+
+配置后在父仓库根目录执行：
+
+```bash
+git allstatus
+```
+
 #### 拉取建议（先父后子）
 
 先在本仓库**根目录** `git pull`，拿到父仓库最新提交（含子模块指针变更），再执行子模块初始化/更新，与远程对齐。
@@ -165,6 +193,33 @@ git submodule update --init --recursive
 ```
 
 若出现 `not our ref`，通常是父仓库记录的子模块提交在子仓远程不存在，需要修复子模块指针或恢复对应提交。
+
+### 6) Backend 数据库供给（统一走 `db-access-bootstrap` + `db-provisioner`）
+
+当 `tpl-app` 中任一 backend（如 `tpl-admin-backend` / `tpl-web-backend`）需要数据库时，统一使用：
+
+- 业务侧脚手架：
+  - `tpl-admin-backend/db-access-bootstrap/`
+  - `tpl-web-backend/db-access-bootstrap/`
+- 底层开通能力：`k8s/utils/db-provisioner/bin/dbctl`
+
+子模块内的 `db-access-bootstrap` 负责组织服务配置和执行流程，`db-provisioner` 负责真正的数据库租户开通/回收与输出适配（k8s Secret / external env）。
+
+#### 快速上手
+
+```bash
+cd tpl-admin-backend/db-access-bootstrap   # 或 tpl-web-backend/db-access-bootstrap
+# 1) 按需修改该 backend 的 config/common.env 与 config/*.env
+# 2) external 场景
+./setup-external-db-access.sh
+# 3) k8s 场景
+./setup-k8s-db-access.sh
+```
+
+示例配置可直接参考：
+
+- `tpl-admin-backend/db-access-bootstrap/config/postgresql.k8s.env`
+- `tpl-web-backend/db-access-bootstrap/config/redis.k8s.env`
 
 ## 使用方法
 
