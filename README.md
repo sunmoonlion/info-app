@@ -246,6 +246,7 @@ bash init.sh investment sunmoonlion
 - 将四个子模块内所有文件中的 `tpl` / `Tpl` / `TPL` 替换为项目名
 - 重命名四个子模块目录，并修正各子模块 `.git` 指针
 - 更新 `.gitmodules` 中的远程 URL
+- 若当前是 Git 克隆：同步父仓 `.git/modules/*`、各子模块的 `worktree` 与远程 URL、父仓 `.git/config` 中的子模块段，并把索引里的子模块路径从 `tpl-*` 改为 `<项目名>-*`（避免仅改目录名后 `git submodule` 断裂）
 
 ### 3. 重命名父目录
 
