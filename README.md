@@ -194,26 +194,27 @@ git submodule update --init --recursive
 
 若出现 `not our ref`，通常是父仓库记录的子模块提交在子仓远程不存在，需要修复子模块指针或恢复对应提交。
 
-### 6) Backend 数据库供给（统一走 `db-access-bootstrap` + `db-provisioner`）
+### 6) Backend 数据库供给（`db-access-bootstrap` + 各 backend 自带 `db-provisioner`）
 
-当 `tpl-app` 中任一 backend（如 `tpl-admin-backend` / `tpl-web-backend`）需要数据库时，统一使用：
+当 `tpl-app` 中任一 backend（如 `tpl-admin-backend` / `tpl-web-backend`）需要数据库时，使用：
 
 - 业务侧脚手架：
   - `tpl-admin-backend/db-access-bootstrap/`
   - `tpl-web-backend/db-access-bootstrap/`
-- 底层开通能力：`k8s/utils/db-provisioner/bin/dbctl`
+- 底层开通能力（**各 backend 目录内各有一份，互不同步；与 `k8s` 仓库解耦**）：
+  - `tpl-admin-backend/db-provisioner/bin/dbctl`
+  - `tpl-web-backend/db-provisioner/bin/dbctl`
 
-子模块内的 `db-access-bootstrap` 负责组织服务配置和执行流程，`db-provisioner` 负责真正的数据库租户开通/回收与输出适配（k8s Secret / external env）。
+`db-access-bootstrap` 负责组织服务配置和执行流程；同级的 **`db-provisioner`** 负责数据库租户开通/回收与输出适配（k8s Secret / external env）。整仓单独迁出时只需带走对应 backend 下的 **`db-provisioner`** 与 **`db-access-bootstrap`**。
 
 #### 快速上手
 
 ```bash
 cd tpl-admin-backend/db-access-bootstrap   # 或 tpl-web-backend/db-access-bootstrap
 # 1) 按需修改该 backend 的 config/common.env 与 config/*.env
-# 2) external 场景
-./setup-external-db-access.sh
-# 3) k8s 场景
-./setup-k8s-db-access.sh
+# 2) 推荐一键：provision + 合并 ../app/.env + 生成 .env.reference
+./merge-and-generate-app-env.sh external   # 或 k8s / merge-only，详见各 db-access-bootstrap/README.md
+# 亦可单独：./setup-external-db-access.sh / ./setup-k8s-db-access.sh
 ```
 
 示例配置可直接参考：
