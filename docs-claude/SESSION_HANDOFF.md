@@ -1,4 +1,4 @@
-# 会话交接（SESSION HANDOFF）
+﻿# 会话交接（SESSION HANDOFF）
 
 > 这是 Claude Code 解决"上下文清零"问题的核心文档。
 > **每次对话结束前更新，下次对话开始时第一个读。**
@@ -48,10 +48,10 @@
 | 服务 | 地址 | 认证 |
 |------|------|------|
 | 服务器外网 IP | `43.159.148.235` | - |
-| PostgreSQL（k8s NodePort） | `llmops.sunmoonai.com:30444` | sunmoonai_dev / zym123 |
-| Redis（k8s NodePort） | `llmops.sunmoonai.com:30446` | StrongRedisPassw0rd! |
+| PostgreSQL（k8s NodePort） | `llmops.sunmoonai.com:30444` | sunmoonai_dev / Po!s1359 |
+| Redis（k8s NodePort） | `llmops.sunmoonai.com:30446` | default / Re!d1359admin |
 | Casdoor | `https://casdoor.sunmoonai.com` | admin / ? |
-| Harbor | `harbor.sunmoonai.com:30443` | admin / Harbor@12345 |
+| Harbor | `harbor.sunmoonai.com:30443` | admin / Ha!b1359admin |
 | k8s 集群 C1 | kubeconfig: `~/.kube/cluster-c1-admin.conf` | SSH: zym@115.190.64.131:1022 |
 
 ---
