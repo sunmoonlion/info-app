@@ -51,7 +51,7 @@
 | PostgreSQL（k8s NodePort） | `llmops.sunmoonai.com:30444` | sunmoonai_dev / Po!s1359 |
 | Redis（k8s NodePort） | `llmops.sunmoonai.com:30446` | default / Re!d1359admin |
 | Casdoor | `https://casdoor.sunmoonai.com` | admin / ? |
-| Harbor | `harbor.sunmoonai.com:30443` | admin / Ha!b1359admin |
+| Harbor | `harbor.sunmoonai.com:30443` | admin / Ha!r1359admin |
 | k8s 集群 C1 | kubeconfig: `~/.kube/cluster-c1-admin.conf` | SSH: zym@115.190.64.131:1022 |
 
 ---
