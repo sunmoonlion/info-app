@@ -218,9 +218,11 @@ PG_ADMIN_PASSWORD=Po!s1359admin
 ### 问题 7：hsy-local-2 节点新 Pod 全部卡在 ContainerCreating
 
 **根因**：
-- `/etc/systemd/system/containerd.service.d/http-proxy.conf` 设置了代理 `http://127.0.0.1:7890`
-- 本地代理已不存在，containerd 拉取镜像/访问 k8s API 均失败
-- Calico CNI 也从 containerd 的环境继承代理，导致 Pod 网络初始化失败
+- 节点初建期间为拉取外网镜像，**手动**写入了 `/etc/systemd/system/containerd.service.d/http-proxy.conf`，让 containerd 走本地 Clash（`http://127.0.0.1:7890`）
+- Harbor 建好后 Clash 停了，但此文件从未清理，containerd 持续尝试连接死掉的代理端口
+- Calico CNI 从 containerd 的 systemd 环境继承代理变量，导致 Pod 网络初始化也失败
+- **此文件与 Kind 集群脚本无关**（Kind 脚本用 `docker exec` 只写容器内部文件系统）；也与节点上启用 TUN 模式无关（TUN 停止后自动清理，不留残余配置）
+- 本项目所有基础设施脚本（step02/setup-runtime 等）均不会在真实节点上创建 `http-proxy.conf`，出现即说明是手动操作遗留
 
 **诊断命令**：
 ```bash
