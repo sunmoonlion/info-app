@@ -55,3 +55,4 @@ tpl-app/dev-to-prod-deploy/   ←→   k8s/app-platform/<app>/resources/k8s-reso
 - [ ] Ingress / IngressRoute
 - [ ] Middleware（rate-limit 等，按需）
 - [ ] PVC（如需持久化存储）
+- [ ] Casdoor 侧 Organization / Application / 组织内初始用户（在 **k8s 仓库** `app-platform/auth-app/casdoor/deploy-casdoor` 执行 `post-deploy-setup.sh`，或按该仓库文档手工等价配置）

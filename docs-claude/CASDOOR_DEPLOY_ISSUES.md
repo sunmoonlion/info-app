@@ -60,13 +60,13 @@ ls -la /home/zym/investment-app/investment-web-backend/db-provisioner/bin/dbctl
 chmod +x /home/zym/investment-app/investment-web-backend/db-provisioner/bin/dbctl
 
 # 所有 .sh 脚本可执行权限（git 默认 100644）
-find /home/zym/k8s/sunmoonai/app-platform/casdoor-app -name "*.sh" -exec chmod +x {} \;
+find /home/zym/k8s/sunmoonai/app-platform/auth-app/casdoor -name "*.sh" -exec chmod +x {} \;
 ```
 
 ### 2.2 db-access-bootstrap
 
 ```bash
-cd /home/zym/k8s/sunmoonai/app-platform/casdoor-app/casdoor/db-access-bootstrap
+cd /home/zym/k8s/sunmoonai/app-platform/auth-app/casdoor/db-access-bootstrap
 ./setup-external-db-access.sh
 ```
 
@@ -80,20 +80,32 @@ cd /home/zym/k8s/sunmoonai/app-platform/casdoor-app/casdoor/db-access-bootstrap
 **必须传 `--cluster C1`**，否则脚本默认使用 KIND 集群：
 
 ```bash
-cd /home/zym/k8s/sunmoonai/app-platform/casdoor-app
+cd /home/zym/k8s/sunmoonai/app-platform/auth-app/casdoor/deploy-casdoor
 ./deploy-casdoor.sh --cluster C1
 ```
 
-### 2.4 post-deploy-setup
+### 2.4 post-deploy-setup（已脚本化）
 
-> 目前通过 Casdoor Web UI 手动配置，以后可自动化。
+**仓库路径（单一事实来源，不在 tpl-app 内）**：
 
-需要确认的配置项：
+- `k8s/sunmoonai/app-platform/auth-app/casdoor/deploy-casdoor/post-deploy-setup.sh`
+- `k8s/sunmoonai/app-platform/auth-app/casdoor/deploy-casdoor/post-deploy-setup.conf`
+
+```bash
+cd /home/zym/k8s/sunmoonai/app-platform/auth-app/casdoor/deploy-casdoor
+bash post-deploy-setup.sh app-platform-dev   # namespace 按环境调整
+```
+
+脚本会（幂等）：写入 Pod 内 `/conf/app.conf`（含 `copyrequestbody=true`）、创建 **Organizations / Applications**（由 `.conf` 中 `ORG_*` / `APP_*` 定义）、补齐 **`organization.languages`**（避免 OAuth 页白板）、按 **`ORG_*`** 创建各业务组织下的 **`admin`** 用户（密码同 **`ADMIN_PASSWORD`**）、更新 **built-in/admin** 密码。
+
+从 **tpl-app `init.sh` 派生的新项目**在 k8s 侧落地后：把 `.conf` 里的组织名、应用名、`redirect_uris`、client_id 改成新项目域名；首次 Casdoor 初始化务必执行上述脚本或等价 SQL（见下文「问题 11 / 12」）。
+
+investment 示例（仍以 `.conf` 为准）：
 
 1. **Organizations**：`investment-web`、`investment-admin`
 2. **Applications**：
-   - `app-investment-web`：`client_id=cd8328352070e08cd432`，redirect_uri 包含 `http://43.159.148.235:8000/api/auth/callback`
-   - `app-investment-admin`：`client_id=440db4e5a480c02c370d`，redirect_uri 包含 `http://43.159.148.235:8001/api/auth/callback`
+   - `app-investment-web`：`client_id=cd8328352070e08cd432`，redirect_uri 含业务 API 的 `/api/auth/callback`
+   - `app-investment-admin`：`client_id=440db4e5a480c02c370d`，同上
 
 ---
 
@@ -190,7 +202,7 @@ git merge --ff-only origin/master  # 或 pull
 
 ### 问题 5：`common.env` 中 `DBCTL_BIN` 使用了 Windows 路径
 
-**文件**：`k8s/sunmoonai/app-platform/casdoor-app/casdoor/db-access-bootstrap/config/common.env`
+**文件**：`k8s/sunmoonai/app-platform/auth-app/casdoor/db-access-bootstrap/config/common.env`
 
 **根因**：在 Windows 环境下编辑，保存了类似 `C:\Users\...` 的路径。
 
@@ -288,6 +300,36 @@ kubectl rollout restart deployment/casdoor -n app-platform-dev
 
 ---
 
+### 问题 11：OAuth `/login/oauth/authorize` 授权页白板（控制台 `languages.length` / `map` 报错）
+
+**现象**：浏览器打开授权链接后整页空白；控制台类似 `Cannot read properties of null (reading 'length')`（Casdoor 前端对 `organizationObj.languages` 未做空判断）。
+
+**根因**：通过 SQL 或残缺脚本写入的 **Organization** 未设置 **`languages`** 列，数据库为 NULL，接口返回 `languages: null`。
+
+**修复**：
+
+1. **推荐**：重新执行 `post-deploy-setup.sh`（含 `patch_organization_languages`）。
+2. **手工 SQL**（按需调整语言列表）：
+```sql
+UPDATE organization
+SET languages = '["en","zh"]'
+WHERE owner = 'admin'
+  AND (languages IS NULL OR languages = '' OR btrim(languages) = 'null');
+```
+
+---
+
+### 问题 12：登录报错「The user: `{organization}/admin` doesn't exist」
+
+**根因**：OAuth 应用绑定某一 **Organization**（如 `investment-admin`）时，只能登录 **该组织下** 的用户。 **`built-in/admin`** 不属于业务组织，会出现 `{org}/admin` 不存在。
+
+**修复**：
+
+1. **推荐**：执行 `post-deploy-setup.sh`，其中 **`ensure_org_admin_users`** 会按 **`ORG_*`** 第三列 `default_application` 幂等创建 **`{组织名}/admin`**（密码与 **`ADMIN_PASSWORD`** 一致）。
+2. **手工**：在 Casdoor 控制台对应组织下新建用户，或与脚本同等逻辑的 SQL 插入（需谨慎字段完整性）。
+
+---
+
 ### 问题 10：`CASDOOR_ENDPOINT` 端口错误（443 vs 30443）
 
 **影响组件**：`investment-web-backend/app/.env`、`investment-admin-backend/app/.env`
@@ -362,7 +404,7 @@ curl -v http://43.159.148.235:8001/api/auth/login 2>&1 | grep -E "location|Locat
 - [ ] 启动 investment-admin-frontend（`pnpm dev --host`，端口 5173）
 - [ ] 完整浏览器 OAuth 流程测试（web + admin 各一次）
 - [ ] 将 Casdoor `app.conf` 纳入 Helm ConfigMap（永久修复问题 9）
-- [ ] `post-deploy-setup` 脚本化（自动创建 Organizations + Applications）
+- [x] `post-deploy-setup` 脚本化（Organizations / Applications / languages 补丁 / 各组织 admin）— 实现见 `auth-app/casdoor/deploy-casdoor/post-deploy-setup.sh`
 
 ---
 
@@ -394,3 +436,7 @@ curl -v http://43.159.148.235:8001/api/auth/login 2>&1 | grep -E "location|Locat
 | `k8s/.../casdoor/db-access-bootstrap/config/common.env` | 修正 `DBCTL_BIN` 路径（Windows→Linux） |
 | `k8s/.../casdoor/db-access-bootstrap/config/postgresql.external.env` | 修正 `DB_HOST`（旧IP→域名）、`PG_ADMIN_PASSWORD` |
 | `tpl-admin-backend/` 对应文件 | 与 `investment-admin-backend/` 同步所有上述修改 |
+| `k8s/.../auth-app/casdoor/deploy-casdoor/post-deploy-setup.sh` | `languages` 写入组织、`patch_organization_languages`、`ensure_org_admin_users`、`sql_escape_single`、built-in admin 密码转义 |
+| `k8s/.../auth-app/casdoor/deploy-casdoor/post-deploy-setup.conf` | `ADMIN_PASSWORD` 与各组织 `admin`、说明 `ORG_*` 与 `APP_*` 对齐 |
+
+（派生新项目时：**无需**把上述脚本复制进 tpl-app；在 **k8s 仓库**维护 Casdoor，tpl-app 侧仅复制业务 submodule 与文档约定。）
