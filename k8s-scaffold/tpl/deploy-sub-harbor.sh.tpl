@@ -5,6 +5,23 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CONFIG_FILE="$SCRIPT_DIR/deploy-harbor-registry-secret.conf"
 # 从 deploy-harbor-registry-secret/ -> harbor-registry-secret/ -> secret/ -> deploy-__APP_NAME__/ -> __APP_NAME__/
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../../../.." && pwd)"
+
+find_k8s_root_dir() {
+    local search_dir="$1"
+    while [[ -n "$search_dir" && "$search_dir" != "/" ]]; do
+        if [[ -f "$search_dir/utils/cluster-config-mapping.sh" ]]; then
+            echo "$search_dir"
+            return 0
+        fi
+        search_dir="$(dirname "$search_dir")"
+    done
+    return 1
+}
+K8S_ROOT_DIR="$(find_k8s_root_dir "$PROJECT_ROOT" || true)"
+if [[ -n "${K8S_ROOT_DIR:-}" ]]; then
+    source "$K8S_ROOT_DIR/utils/cluster-config-mapping.sh"
+fi
+
 K8S_RESOURCE_DIR="$PROJECT_ROOT/resources/k8s-resource"
 HARBOR_YAML="$K8S_RESOURCE_DIR/custom-values/secret/harbor-registry-secret/generate-harbor-registry-secret/harbor-registry-secret-generated.yaml"
 
@@ -20,6 +37,16 @@ main() {
     local project_id="${2:-${PROJECT_ID:-}}"
     local namespace="${3:-${NAMESPACE:-}}"
     local environment="${4:-${ENVIRONMENT:-}}"
+
+    if declare -F apply_cluster_config_mapping >/dev/null; then
+        apply_cluster_config_mapping
+    fi
+
+    if declare -F get_cluster_harbor_registry >/dev/null; then
+        export DOCKER_SERVER="${DOCKER_SERVER:-$(get_cluster_harbor_registry)}"
+    else
+        export DOCKER_SERVER="${DOCKER_SERVER:-__REGISTRY__}"
+    fi
 
     export PROJECT_ID="$project_id" NAMESPACE="$namespace" ENVIRONMENT="$environment" ENV="${ENV:-dev}"
 

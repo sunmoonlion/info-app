@@ -12,7 +12,7 @@
 #               backend/node-frontend: 有 ConfigMap+Secret envFrom
 #               static-frontend: 无 envFrom，无 ConfigMap，资源配额更小
 #   --namespace NAMESPACE     目标 namespace（默认 app-platform-dev）
-#   --registry REGISTRY       镜像仓库地址（默认 harbor.sunmoonai.com:30443）
+#   --registry REGISTRY       远程集群镜像仓库地址（默认 harbor.sunmoonai.com）
 #   --image-project PROJECT   镜像项目名（默认 app-images）
 #   --output-dir DIR          输出目录（默认当前目录）
 #   --no-configmap            不生成 ConfigMap（static-frontend 自动设置）
@@ -57,7 +57,8 @@ shift 2
 
 APP_TYPE="backend"
 NAMESPACE="app-platform-dev"
-REGISTRY="harbor.sunmoonai.com:30443"
+REGISTRY="harbor.sunmoonai.com"
+KIND_REGISTRY="harbor.sunmoonai.com:30443"
 IMAGE_PROJECT="app-images"
 OUTPUT_DIR="."
 WITH_CONFIGMAP="true"
@@ -144,6 +145,7 @@ render_tpl() {
         -e "s|__PORT__|$PORT|g" \
         -e "s|__NAMESPACE__|$NAMESPACE|g" \
         -e "s|__REGISTRY__|$REGISTRY|g" \
+        -e "s|__KIND_REGISTRY__|$KIND_REGISTRY|g" \
         -e "s|__IMAGE_PROJECT__|$IMAGE_PROJECT|g" \
         -e "s|__MEMORY_REQUEST__|$MEMORY_REQUEST|g" \
         -e "s|__MEMORY_LIMIT__|$MEMORY_LIMIT|g" \

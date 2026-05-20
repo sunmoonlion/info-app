@@ -33,7 +33,7 @@ cd tpl-app/k8s-scaffold/
 | `PORT` | 容器端口 | `8000` |
 | `--type` | 应用类型，见下表 | `backend`（默认） |
 | `--namespace` | 目标 namespace | `app-platform-dev`（默认） |
-| `--registry` | 镜像仓库地址 | `harbor.sunmoonai.com:30443`（默认） |
+| `--registry` | 远程集群镜像仓库地址 | `harbor.sunmoonai.com`（默认） |
 | `--image-project` | 镜像项目名 | `app-images`（默认） |
 | `--output-dir` | 输出到指定目录 | `./`（默认） |
 | `--no-configmap` | 不生成 ConfigMap | — |
@@ -184,10 +184,16 @@ export CASDOOR_CLIENT_SECRET="${CASDOOR_CLIENT_SECRET:-}"
 **`custom-values/secret/harbor-registry-secret/.../generate-harbor-registry-secret.conf`**
 
 ```bash
-DOCKER_SERVER="harbor.sunmoonai.com:30443"
+DOCKER_SERVER="harbor.sunmoonai.com"
+KIND_DOCKER_SERVER="harbor.sunmoonai.com:30443"
 DOCKER_USERNAME="admin"
 DOCKER_PASSWORD="realpassword"
 ```
+
+新增 app 不要写死 `harbor.sunmoonai.com:30443`。部署入口只传 `kind` 或 `c1`，生成的脚本会通过 `k8s/utils/cluster-config-mapping.sh` 中的 `get_cluster_harbor_registry` 自动解析：
+
+- `KIND` -> `harbor.sunmoonai.com:30443`
+- `C1/C2/C3` -> `harbor.sunmoonai.com`
 
 ### 8. Ingress 域名和路径
 
@@ -270,7 +276,8 @@ scaffold 用 `sed` 替换 `tpl/` 中的以下占位符：
 | `__APP_NAME_UPPER__` | 应用名（UPPER_SNAKE_CASE） | `REPORT_SERVICE` |
 | `__PORT__` | 端口号 | `8000` |
 | `__NAMESPACE__` | namespace | `app-platform-dev` |
-| `__REGISTRY__` | 镜像仓库地址 | `harbor.sunmoonai.com:30443` |
+| `__REGISTRY__` | 远程集群镜像仓库地址 | `harbor.sunmoonai.com` |
+| `__KIND_REGISTRY__` | Kind 镜像仓库地址 | `harbor.sunmoonai.com:30443` |
 | `__IMAGE_PROJECT__` | 镜像项目名 | `app-images` |
 | `__MEMORY_REQUEST__` | 内存请求 | `256Mi` |
 | `__MEMORY_LIMIT__` | 内存限制 | `512Mi` |

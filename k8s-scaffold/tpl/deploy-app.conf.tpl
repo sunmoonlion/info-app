@@ -8,6 +8,13 @@ __APP_NAME_UPPER___PROJECT_ID="${__APP_NAME_UPPER___PROJECT_ID:-sunmoonai}"
 __APP_NAME_UPPER___NAMESPACE="${__APP_NAME_UPPER___NAMESPACE:-__NAMESPACE__}"
 ENVIRONMENT="${ENVIRONMENT:-development}"   # production|development
 
+# Harbor 地址不要写死为 harbor.sunmoonai.com:30443。
+# 部署入口只传 kind/c1，由 k8s/utils/cluster-config-mapping.sh 统一解析。
+__APP_NAME_UPPER___IMAGE_REGISTRY="${__APP_NAME_UPPER___IMAGE_REGISTRY:-__REGISTRY__}"
+KIND___APP_NAME_UPPER___IMAGE_REGISTRY="__KIND_REGISTRY__"
+DOCKER_SERVER="${DOCKER_SERVER:-__REGISTRY__}"
+KIND_DOCKER_SERVER="__KIND_REGISTRY__"
+
 # 组件开关（控制是否部署）
 namespace_enabled="true"
 secrets_enabled="true"

@@ -254,7 +254,7 @@ deploy_app() {
 
     auto_generate_yaml "$__APP_NAME_UPPER___YAML" "$K8S_RESOURCE_DIR" || exit 1
 
-    export __APP_NAME_UPPER___IMAGE_REGISTRY="${__APP_NAME_UPPER___IMAGE_REGISTRY:-harbor.sunmoonai.com:30443}"
+    export __APP_NAME_UPPER___IMAGE_REGISTRY="${__APP_NAME_UPPER___IMAGE_REGISTRY:-$(get_cluster_harbor_registry)}"
     export __APP_NAME_UPPER___IMAGE_PROJECT="${__APP_NAME_UPPER___IMAGE_PROJECT:-app-images}"
     export __APP_NAME_UPPER___IMAGE="${__APP_NAME_UPPER___IMAGE:-__APP_NAME__}"
     export __APP_NAME_UPPER___TAG="${__APP_NAME_UPPER___TAG:-1.0.0}"
