@@ -107,7 +107,7 @@ BFF 认证说明：
 
 无论在父仓库还是任一子仓库里改了代码，若要把结果同步到远程协作，都应：
 
-1. 在**涉及改动的子模块目录**内：`git add` → `git commit` → `git push`（每个动过的子模块各做一遍）。
+1. 在**涉及改动的子模块目录**内：`git add` → `git commit` → `git push`（每个动过的子模块各做一遍；若子模块处于 detached HEAD，见下方说明）。
 2. 回到**父仓库根目录**（如 `tpl-app`）：`git add` → `git commit` → `git push`，把子模块目录在父仓库里记录的**提交指针**一并推上去。
 
 父仓库只记录各子模块**目录**对应哪一个提交，不会跟踪子模块内部的源码文件。暂存指针时可用 `git add <子模块目录>` 只更新某一个子模块；若图省事、且 `git status` 确认没有误纳入其它改动，也可在父根直接 `git add .`（会同时暂存父仓库自己的文件与已变化的子模块指针）。
@@ -122,6 +122,31 @@ BFF 认证说明：
 | 只想提交父文件、**不要**顺带更新某个子模块指针 | 不要用 `.`，改为 `git add README.md` 等具体路径 |
 
 注意：子模块**内部的**源码改动，只能在**进入该子模块目录后**用 `git add` / `commit`，不要在父仓库里对 `tpl-xxx/src/...` 单独 `add`。
+
+**子模块 detached HEAD 怎么推**
+
+子模块经常会被父仓库检出到某个具体提交，`git status` 可能显示：
+
+```bash
+HEAD detached from xxxxxxx
+nothing to commit, working tree clean
+```
+
+这不是错误。若你已经在该子模块里提交了新 commit，只是当前不在本地 `master` 分支上，不能直接依赖 `git push`。常用做法是明确把当前 HEAD 推到远程 `master`：
+
+```bash
+git push origin HEAD:master
+```
+
+如果你希望子模块回到本地 `master` 分支再推，也可以先把 `master` 指到当前提交：
+
+```bash
+git branch -f master HEAD
+git switch master
+git push origin master
+```
+
+推完子模块后，仍然要回到父仓库根目录提交子模块指针。
 
 **命令示例**（假设父仓库根目录名为 `tpl-app`）：
 
