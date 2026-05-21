@@ -106,6 +106,13 @@ mv "$SCRIPT_DIR/tpl-web-backend"    "$SCRIPT_DIR/${APP_NAME}-web-backend"
 mv "$SCRIPT_DIR/tpl-web-frontend"   "$SCRIPT_DIR/${APP_NAME}-web-frontend"
 mv "$SCRIPT_DIR/tpl-admin-backend"  "$SCRIPT_DIR/${APP_NAME}-admin-backend"
 
+# 3b. 同步 admin-backend 的 uv.lock 工作区包名（*.lock 不参与 [1/5] 文本替换）
+uv_lock="$SCRIPT_DIR/${APP_NAME}-admin-backend/app/uv.lock"
+if [ -f "$uv_lock" ]; then
+  patch_file "$uv_lock" -e "s/name = \"tpl-admin-backend\"/name = \"${APP_NAME}-admin-backend\"/g"
+  echo "    patched uv.lock workspace package -> ${APP_NAME}-admin-backend"
+fi
+
 # 修正 .git 文件指向（子模块内的 .git 是文件，指向父仓库 modules 目录）
 for sub in admin-frontend web-backend web-frontend admin-backend; do
   echo "gitdir: ../.git/modules/${APP_NAME}-${sub}" \
