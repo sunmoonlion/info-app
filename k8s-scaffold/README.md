@@ -12,6 +12,9 @@ cd tpl-app/k8s-scaffold/
 # 后端服务（NestJS / FastAPI）
 ./scaffold.sh my-service 8000
 
+# 需要平台 S3 对象存储的后端
+./scaffold.sh document-service 8000 --with-object-storage
+
 # Next.js 前端（有 Node.js 服务层，运行时读取环境变量）
 ./scaffold.sh my-web 3000 --type node-frontend
 
@@ -39,6 +42,7 @@ cd tpl-app/k8s-scaffold/
 | `--no-configmap` | 不生成 ConfigMap | — |
 | `--no-ingress` | 不生成 Ingress | — |
 | `--no-pvc` | 不生成 PVC | — |
+| `--with-object-storage` | 增加独立的 `<app>-s3` ConfigMap/Secret `envFrom` | — |
 | `--memory-request` | 内存请求（覆盖类型默认值） | `512Mi` |
 | `--memory-limit` | 内存限制 | `1Gi` |
 | `--cpu-request` | CPU 请求 | `200m` |
@@ -51,6 +55,10 @@ cd tpl-app/k8s-scaffold/
 | `backend` | NestJS / FastAPI 等后端（**默认**） | 内存 256Mi/512Mi，CPU 100m/500m | 有 |
 | `node-frontend` | Next.js（有 Node.js 进程，运行时读取 env） | 内存 256Mi/512Mi，CPU 100m/500m | 有 |
 | `static-frontend` | Vite/React + nginx（构建时烧入，无运行时 env） | 内存 64Mi/128Mi，CPU 50m/200m | **无** |
+
+`--with-object-storage` 不创建 Bucket 或凭据，只让 Deployment 引用 Data
+Platform S3 Provisioner 创建的 `<app>-s3` ConfigMap 和 Secret。该选项只适用
+于 Backend 或 Node 服务；静态前端使用时会被拒绝。
 
 ---
 
