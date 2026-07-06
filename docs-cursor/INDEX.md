@@ -33,6 +33,7 @@
 - `ENV_BASELINE.md`：环境与依赖基线
 - `RUNBOOK.md`：可执行操作手册（启动/排查步骤）
 - `API_CONTRACT.md`：接口契约
+- `SPIDER_MVP_HANDOFF.md`：采集 MVP 交接文档（完成、未完成、迁移后续步骤）
 - `TEST_CHECKLIST.md`：联调与回归清单
 
 ### 4) 治理与共识
