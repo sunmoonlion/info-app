@@ -405,8 +405,8 @@ pnpm build-only
 
 1. 部署新版后验证应用内 `document_version` 增量索引和 knowledge-app ingestion API。
 2. 前端页面产品化小修。
-3. Scrapy worker。
-4. Playwright worker。
+3. Scrapy worker：后端已能导入 crawler worker 产出的 `results` / `links`。
+4. Playwright worker：后端已能导入渲染 worker 产出的 `results` / `links`。
 5. PDF / Office 对接 `tools-app`。
 
 ## 8. 当前 Git 变更概览
