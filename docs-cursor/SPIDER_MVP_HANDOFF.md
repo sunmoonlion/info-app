@@ -16,7 +16,8 @@
 - 前端最小管理页面已写好，但前端依赖安装失败，未完成构建验证。
 - Elasticsearch/OpenSearch 索引 mapping、写入 adapter、手动重建和 `document_version`
   增量写入已实现；真实环境联调尚未完成。
-- 真实 `knowledge-app` 调用、完整反爬策略还未实现。
+- `knowledge-app` ingestion client 已实现为可配置投递；真实环境联调尚未完成。
+- 完整反爬策略还未实现。
 
 ## 2. 相关路径
 
@@ -303,7 +304,6 @@ uv run alembic upgrade head
 
 仍未实现：
 
-- 调用真实 `knowledge-app` ingestion API。
 - Scrapy 真实执行。
 - Playwright 真实执行。
 - 完整反爬策略引擎。
@@ -316,6 +316,7 @@ uv run alembic upgrade head
 - Elasticsearch/OpenSearch 真实索引写入。
 - 删除索引后的手动重建机制。
 - `document_version` 提交成功后的增量索引写入。
+- 配置 `KNOWLEDGE_APP_INGEST_URL` 后调用真实 `knowledge-app` ingestion API。
 - `distribution_record` 的失败重试和状态对账。
 - 抽取结果人工审核。
 
@@ -398,11 +399,10 @@ pnpm build-only
 建议下一步优先级：
 
 1. 执行数据库 migration，并用真实 PostgreSQL / S3 / Elasticsearch 跑端到端闭环。
-2. `knowledge-app` ingestion client。
-3. 前端页面构建验证和小修。
-4. Scrapy worker。
-5. Playwright worker。
-6. PDF / Office 对接 `tools-app`。
+2. 前端页面构建验证和小修。
+3. Scrapy worker。
+4. Playwright worker。
+5. PDF / Office 对接 `tools-app`。
 
 ## 8. 当前 Git 变更概览
 
