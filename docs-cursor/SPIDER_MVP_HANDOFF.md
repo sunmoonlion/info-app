@@ -1,6 +1,28 @@
 # Spider MVP Handoff
 
-日期：2026-07-06
+日期：2026-07-07
+
+## 0. 暂停交接快照
+
+本轮先暂停，不再继续部署或扩功能。代码已由用户推送到 Gitee 的
+`codex-1` 分支；下次恢复时以远端 `codex-1` 为准同步。
+
+已推送的分支头：
+
+```text
+info-admin-backend   55bf97c
+info-admin-frontend  a40d0b2
+info-app             23b0f5f
+k8s                  984c636
+```
+
+当前建议不要在没有准备好验证窗口时直接部署。恢复时优先做：
+
+1. 同步四个仓库到 `codex-1`。
+2. 重新跑后端 `uv run pytest`、`uv run pyright`，必要时跑前端 `pnpm type-check` / `pnpm build-only`。
+3. 选择合适时间构建并部署新版镜像到 KIND。
+4. 在集群内执行/确认 Alembic migration 到 head。
+5. 用平台 PostgreSQL、S3、RabbitMQ、Elasticsearch 跑一遍端到端采集、索引和治理 API smoke test。
 
 本文用于把 `info-app` 的采集与资讯治理 MVP 迁移到另一台机器后继续实施。
 
@@ -11,13 +33,14 @@
 当前判断：
 
 - 后端代码主体已完成。
-- 数据库 migration 已在本机 kind PostgreSQL 执行到 head，并已用普通应用用户在全新临时库验证通过。
+- 数据库 migration 已在本机 kind PostgreSQL 执行到 head，并已用普通应用用户在全新临时库验证通过；当前 head 包含 `20260707_0002_source_governance`。
 - 后端静态检查和单元测试通过。
 - 前端最小管理页面已写好，依赖安装、`pnpm type-check` 和 `pnpm build-only` 已通过。
 - Elasticsearch/OpenSearch 索引 mapping、写入 adapter、手动重建和 `document_version`
   增量写入已实现；平台认证、CA 和 alias 运行配置已补齐，并已验证真实 alias 写入权限。
 - `knowledge-app` ingestion client 已实现为可配置投递；真实 ingestion API 联调尚未完成。
-- 完整反爬策略还未实现。
+- 来源治理、重复候选、转载关系、实体关联、摘要画像和统一审计日志已完成后端 MVP；前端只完成来源治理字段，完整治理工作台尚未产品化。
+- 完整反爬策略、真实 Scrapy/Playwright 执行、PDF/Office 转换仍待后续阶段。
 
 ## 2. 相关路径
 
@@ -237,7 +260,7 @@ info-admin-backend/app/tests/test_upload_helpers.py
 
 ```bash
 uv run pytest
-# 12 passed
+# 34 passed
 
 uv run pyright
 # 0 errors
@@ -282,14 +305,14 @@ uv run alembic upgrade head --sql
 uv run python -c "from app.main import app; print(len(app.routes))"
 ```
 
-结果：
+最新结果：
 
-- `pytest`：19 passed
+- `pytest`：34 passed
 - `pyright`：0 errors
 - `compileall`：通过
-- `alembic heads`：识别 `20260706_0001`
+- `alembic heads`：识别当前 head，包含 `20260707_0002_source_governance`
 - 应用导入：通过
-- `uv run alembic current`：`20260706_0001 (head)`
+- `uv run alembic current`：已验证到 head
 - 全新临时库迁移：普通 `info_admin_user` 执行 `uv run alembic upgrade head` 通过，不需要 `uuid-ossp` 扩展权限
 - 平台 S3：`STORAGE_BACKEND=s3` crawl job 成功写入 raw/header/clean/text 四类对象到 `development-info-originals`
 - 平台 Elasticsearch：使用 Secret/CA 向 `development-info-app-information-write` alias 写入验证文档成功，写入后已删除
@@ -298,16 +321,16 @@ uv run python -c "from app.main import app; print(len(app.routes))"
 
 补充说明：直接抓取 `https://example.com` 在当前本机网络下返回 `ConnectTimeout`，API 已能将其记录为 crawl job 业务失败，不再触发 500。
 
-## 6. 未完成
+## 6. 未完成 / 暂停点
 
-迁移到另一台机器时优先确认：
+恢复时优先确认：
 
-1. 准备 PostgreSQL / Redis。
-2. 配置 `DATABASE_URL` 和 Redis 连接信息。
-3. 执行 `uv run alembic upgrade head`，并确认 `uv run alembic current` 为 `20260706_0001 (head)`。
-4. 启动后端。
-5. 用可访问 URL 跑一遍 `crawl_job -> document -> artifact` 闭环。
-6. 检查本地对象存储或 S3 写入 `raw.html`、`headers.json`、`clean.md`、`text.txt`。
+1. 先不要假设 git push 已经更新运行中服务；当前集群仍可能跑旧镜像。
+2. 选择合适窗口后，用 `~/k8s/sunmoonai/app-platform/info-app/deploy-info-app-all.sh --cluster KIND` 构建/部署新版镜像。
+3. 执行或确认集群 Alembic migration 到 head。
+4. 用可访问 URL 跑一遍 `crawl_job -> document_version -> search index -> governance metadata` 闭环。
+5. 检查平台 S3 写入 `raw.html`、`headers.json`、`clean.md`、`text.txt`。
+6. 检查 RabbitMQ worker 是否继续消费 `app.tasks.crawl_url` 和 `app.tasks.index_document_version`。
 
 仍未实现：
 
@@ -317,13 +340,12 @@ uv run python -c "from app.main import app; print(len(app.routes))"
 - 前端完整产品化。
 - PDF / Office 真实转换，需要后续对接 `tools-app`。
 
-已补充但待真实环境验证：
+已补充但待下一轮真实环境验证：
 
-- 删除索引后的手动重建机制。
-- 部署新版镜像后在集群内确认 Celery worker 后台采集闭环。
+- 部署新版镜像后在集群内确认 Celery worker 后台采集、搜索增量索引和治理 API。
 - 配置 `KNOWLEDGE_APP_INGEST_URL` 后调用真实 `knowledge-app` ingestion API。
 - `distribution_record` 的失败重试和状态对账。
-- 抽取结果人工审核。
+- 治理操作的前端完整产品化。
 
 ## 7. 下一台机器建议步骤
 
@@ -410,51 +432,18 @@ pnpm build-only
 5. 治理增强：K1-K6 已完成，后续可产品化前端治理操作。
 6. PDF / Office 对接 `tools-app`。
 
-## 8. 当前 Git 变更概览
+## 8. 当前 Git 状态
 
-`/home/zym/info-app` 顶层状态：
-
-```text
- m info-admin-backend
- ? info-admin-frontend
-```
-
-后端子模块主要变更：
+暂停时四个仓库均已推送到 `origin/codex-1`：
 
 ```text
-M  app/.env.example
-M  app/alembic/env.py
-M  app/app/infrastructure/messaging/celery_producer.py
-M  app/app/infrastructure/models/__init__.py
-M  app/app/interfaces/endpoints/routes.py
-M  app/app/worker.py
-M  app/core/config.py
-M  app/pyproject.toml
-M  app/uv.lock
-?? app/alembic/versions/20260706_0001_info_spider_mvp.py
-?? app/app/application/collectors/
-?? app/app/application/services/info_crawl_service.py
-?? app/app/infrastructure/models/info.py
-?? app/app/infrastructure/storage/object_storage.py
-?? app/app/interfaces/endpoints/info_routes.py
-?? app/app/interfaces/schemas/info.py
-?? app/app/tasks/crawl.py
-?? app/tests/
-?? docs/SPIDER_MVP.md
+info-admin-backend   55bf97c
+info-admin-frontend  a40d0b2
+info-app             23b0f5f
+k8s                  984c636
 ```
 
-前端子模块主要变更：
-
-```text
-?? src/pages/info/
-```
-
-平台文档变更：
-
-```text
-/home/zym/k8s/sunmoonai/app-platform/docs/README.md
-/home/zym/k8s/sunmoonai/app-platform/info-app/docs/
-```
+本次交接文档更新完成后，需要再提交/推送文档提交；除此之外不要继续改功能代码。
 
 ## 9. 架构边界
 
