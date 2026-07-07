@@ -11,7 +11,7 @@
 当前判断：
 
 - 后端代码主体已完成。
-- 数据库 migration 已在本机 kind PostgreSQL 执行到 head。
+- 数据库 migration 已在本机 kind PostgreSQL 执行到 head，并已用普通应用用户在全新临时库验证通过。
 - 后端静态检查和单元测试通过。
 - 前端最小管理页面已写好，依赖安装、`pnpm type-check` 和 `pnpm build-only` 已通过。
 - Elasticsearch/OpenSearch 索引 mapping、写入 adapter、手动重建和 `document_version`
@@ -286,6 +286,7 @@ uv run python -c "from app.main import app; print(len(app.routes))"
 - `alembic heads`：识别 `20260706_0001`
 - 应用导入：通过
 - `uv run alembic current`：`20260706_0001 (head)`
+- 全新临时库迁移：普通 `info_admin_user` 执行 `uv run alembic upgrade head` 通过，不需要 `uuid-ossp` 扩展权限
 - 本地 API：`POST /api/admin/crawl-jobs/{job_id}/run` 抓取 `http://127.0.0.1:18080/` 成功，返回 `status=succeeded`、`http_status=200`，并生成 `document_id` / `document_version_id`
 
 补充说明：直接抓取 `https://example.com` 在当前本机网络下返回 `ConnectTimeout`，API 已能将其记录为 crawl job 业务失败，不再触发 500。
