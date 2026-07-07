@@ -15,7 +15,7 @@
 - 后端静态检查和单元测试通过。
 - 前端最小管理页面已写好，依赖安装、`pnpm type-check` 和 `pnpm build-only` 已通过。
 - Elasticsearch/OpenSearch 索引 mapping、写入 adapter、手动重建和 `document_version`
-  增量写入已实现；平台认证、CA 和 alias 运行配置已补齐，部署后仍需做真实写入联调。
+  增量写入已实现；平台认证、CA 和 alias 运行配置已补齐，并已验证真实 alias 写入权限。
 - `knowledge-app` ingestion client 已实现为可配置投递；真实 ingestion API 联调尚未完成。
 - 完整反爬策略还未实现。
 
@@ -292,6 +292,7 @@ uv run python -c "from app.main import app; print(len(app.routes))"
 - `uv run alembic current`：`20260706_0001 (head)`
 - 全新临时库迁移：普通 `info_admin_user` 执行 `uv run alembic upgrade head` 通过，不需要 `uuid-ossp` 扩展权限
 - 平台 S3：`STORAGE_BACKEND=s3` crawl job 成功写入 raw/header/clean/text 四类对象到 `development-info-originals`
+- 平台 Elasticsearch：使用 Secret/CA 向 `development-info-app-information-write` alias 写入验证文档成功，写入后已删除
 - 本地 API：`POST /api/admin/crawl-jobs/{job_id}/run` 抓取 `http://127.0.0.1:18080/` 成功，返回 `status=succeeded`、`http_status=200`，并生成 `document_id` / `document_version_id`
 
 补充说明：直接抓取 `https://example.com` 在当前本机网络下返回 `ConnectTimeout`，API 已能将其记录为 crawl job 业务失败，不再触发 500。
@@ -317,7 +318,6 @@ uv run python -c "from app.main import app; print(len(app.routes))"
 
 已补充但待真实环境验证：
 
-- Elasticsearch/OpenSearch 真实索引写入。
 - 删除索引后的手动重建机制。
 - `document_version` 提交成功后的增量索引写入。
 - 部署新版后确认 Celery worker 后台采集闭环。
@@ -403,7 +403,7 @@ pnpm build-only
 
 建议下一步优先级：
 
-1. 部署新版后用真实 S3 / Elasticsearch / knowledge-app ingestion API 做联调。
+1. 部署新版后验证应用内 `document_version` 增量索引和 knowledge-app ingestion API。
 2. 前端页面产品化小修。
 3. Scrapy worker。
 4. Playwright worker。
