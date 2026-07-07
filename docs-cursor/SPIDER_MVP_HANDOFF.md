@@ -13,7 +13,7 @@
 - 后端代码主体已完成。
 - 数据库 migration 已写好，但未在线执行。
 - 后端静态检查和单元测试通过。
-- 前端最小管理页面已写好，但前端依赖安装失败，未完成构建验证。
+- 前端最小管理页面已写好，依赖安装、`pnpm type-check` 和 `pnpm build-only` 已通过。
 - Elasticsearch/OpenSearch 索引 mapping、写入 adapter、手动重建和 `document_version`
   增量写入已实现；真实环境联调尚未完成。
 - `knowledge-app` ingestion client 已实现为可配置投递；真实环境联调尚未完成。
@@ -213,7 +213,7 @@ info-admin-frontend/src/pages/info/crawl.vue
 - 文件上传。
 - Document 列表查询。
 
-注意：前端没有完成构建验证。当前机器缺 `node_modules`，`pnpm install` 在 `npmmirror` 超时；切换官方 registry 的安装请求未获批准。
+验证：已安装前端依赖，`pnpm type-check` 和 `pnpm build-only` 通过。
 
 ### 3.8 测试
 
@@ -308,7 +308,6 @@ uv run alembic upgrade head
 - Playwright 真实执行。
 - 完整反爬策略引擎。
 - 前端完整产品化。
-- 前端 type-check / build 验证。
 - PDF / Office 真实转换，需要后续对接 `tools-app`。
 
 已补充但待真实环境验证：
@@ -399,7 +398,7 @@ pnpm build-only
 建议下一步优先级：
 
 1. 执行数据库 migration，并用真实 PostgreSQL / S3 / Elasticsearch 跑端到端闭环。
-2. 前端页面构建验证和小修。
+2. 前端页面产品化小修。
 3. Scrapy worker。
 4. Playwright worker。
 5. PDF / Office 对接 `tools-app`。
