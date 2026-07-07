@@ -316,7 +316,6 @@ uv run python -c "from app.main import app; print(len(app.routes))"
 - 完整反爬策略引擎。
 - 前端完整产品化。
 - PDF / Office 真实转换，需要后续对接 `tools-app`。
-- 人工审核审计日志增强。
 
 已补充但待真实环境验证：
 
@@ -408,7 +407,7 @@ pnpm build-only
 2. 前端页面产品化小修。
 3. Scrapy worker：后端已能导入 crawler worker 产出的 `results` / `links`。
 4. Playwright worker：后端已能导入渲染 worker 产出的 `results` / `links`。
-5. 治理增强：K1-K5 已完成，下一步可做人工审核审计日志增强。
+5. 治理增强：K1-K6 已完成，后续可产品化前端治理操作。
 6. PDF / Office 对接 `tools-app`。
 
 ## 8. 当前 Git 变更概览
