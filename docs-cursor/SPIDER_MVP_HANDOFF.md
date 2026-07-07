@@ -14,7 +14,9 @@
 - 数据库 migration 已写好，但未在线执行。
 - 后端静态检查和单元测试通过。
 - 前端最小管理页面已写好，但前端依赖安装失败，未完成构建验证。
-- Elasticsearch、真实 `knowledge-app` 调用、完整反爬策略还未实现。
+- Elasticsearch/OpenSearch 索引 mapping、写入 adapter、手动重建和 `document_version`
+  增量写入已实现；真实环境联调尚未完成。
+- 真实 `knowledge-app` 调用、完整反爬策略还未实现。
 
 ## 2. 相关路径
 
@@ -301,17 +303,21 @@ uv run alembic upgrade head
 
 仍未实现：
 
-- Elasticsearch 真实索引写入。
-- 索引重建机制。
 - 调用真实 `knowledge-app` ingestion API。
-- `distribution_record` 的失败重试和状态对账。
 - Scrapy 真实执行。
 - Playwright 真实执行。
 - 完整反爬策略引擎。
-- 抽取结果人工审核。
 - 前端完整产品化。
 - 前端 type-check / build 验证。
 - PDF / Office 真实转换，需要后续对接 `tools-app`。
+
+已补充但待真实环境验证：
+
+- Elasticsearch/OpenSearch 真实索引写入。
+- 删除索引后的手动重建机制。
+- `document_version` 提交成功后的增量索引写入。
+- `distribution_record` 的失败重试和状态对账。
+- 抽取结果人工审核。
 
 ## 7. 下一台机器建议步骤
 
@@ -391,13 +397,12 @@ pnpm build-only
 
 建议下一步优先级：
 
-1. Elasticsearch adapter 和索引写入。
+1. 执行数据库 migration，并用真实 PostgreSQL / S3 / Elasticsearch 跑端到端闭环。
 2. `knowledge-app` ingestion client。
 3. 前端页面构建验证和小修。
-4. 抽取结果审核接口。
-5. Scrapy worker。
-6. Playwright worker。
-7. PDF / Office 对接 `tools-app`。
+4. Scrapy worker。
+5. Playwright worker。
+6. PDF / Office 对接 `tools-app`。
 
 ## 8. 当前 Git 变更概览
 
