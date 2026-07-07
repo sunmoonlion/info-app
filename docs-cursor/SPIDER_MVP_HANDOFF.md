@@ -15,7 +15,7 @@
 - 后端静态检查和单元测试通过。
 - 前端最小管理页面已写好，依赖安装、`pnpm type-check` 和 `pnpm build-only` 已通过。
 - Elasticsearch/OpenSearch 索引 mapping、写入 adapter、手动重建和 `document_version`
-  增量写入已实现；当前验证使用 `SEARCH_BACKEND=disabled`，真实 Elasticsearch 写入仍待联调。
+  增量写入已实现；平台认证、CA 和 alias 运行配置已补齐，部署后仍需做真实写入联调。
 - `knowledge-app` ingestion client 已实现为可配置投递；真实 ingestion API 联调尚未完成。
 - 完整反爬策略还未实现。
 
@@ -118,6 +118,9 @@ info-admin-backend/app/app/infrastructure/storage/object_storage.py
 
 - `STORAGE_BACKEND=local`
 - `STORAGE_BACKEND=s3`
+
+K8S `info-admin-backend-config` 默认启用 `STORAGE_BACKEND=s3`；
+Celery worker 会继承业务 PostgreSQL、Redis、S3、Elasticsearch 配置。
 
 本地默认写入：
 
@@ -311,6 +314,7 @@ uv run python -c "from app.main import app; print(len(app.routes))"
 - Elasticsearch/OpenSearch 真实索引写入。
 - 删除索引后的手动重建机制。
 - `document_version` 提交成功后的增量索引写入。
+- 部署新版后确认 S3 对象写入和 Celery worker 后台采集闭环。
 - 配置 `KNOWLEDGE_APP_INGEST_URL` 后调用真实 `knowledge-app` ingestion API。
 - `distribution_record` 的失败重试和状态对账。
 - 抽取结果人工审核。
@@ -393,7 +397,7 @@ pnpm build-only
 
 建议下一步优先级：
 
-1. 用真实 S3 / Elasticsearch / knowledge-app ingestion API 做联调。
+1. 部署新版后用真实 S3 / Elasticsearch / knowledge-app ingestion API 做联调。
 2. 前端页面产品化小修。
 3. Scrapy worker。
 4. Playwright worker。
