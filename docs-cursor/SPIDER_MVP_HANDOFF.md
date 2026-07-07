@@ -316,7 +316,7 @@ uv run python -c "from app.main import app; print(len(app.routes))"
 - 完整反爬策略引擎。
 - 前端完整产品化。
 - PDF / Office 真实转换，需要后续对接 `tools-app`。
-- 转载关系合并、实体/主题关联和摘要评分等治理增强。
+- 实体/主题关联和摘要评分等治理增强。
 
 已补充但待真实环境验证：
 
@@ -408,7 +408,7 @@ pnpm build-only
 2. 前端页面产品化小修。
 3. Scrapy worker：后端已能导入 crawler worker 产出的 `results` / `links`。
 4. Playwright worker：后端已能导入渲染 worker 产出的 `results` / `links`。
-5. 治理增强：K1 来源可信度/版权状态、K2 近似重复检测已完成，下一步可做转载关系合并。
+5. 治理增强：K1 来源可信度/版权状态、K2 近似重复检测、K3 转载/同源关系标注已完成，下一步可做实体/主题关联。
 6. PDF / Office 对接 `tools-app`。
 
 ## 8. 当前 Git 变更概览
