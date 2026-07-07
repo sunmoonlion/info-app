@@ -6,17 +6,17 @@
 
 ## 1. 总体状态
 
-本轮已完成 `info-app` 采集能力的第一版代码骨架和后端 MVP。由于当前机器没有本地 PostgreSQL / S3 / Redis 运行环境，尚未做真实端到端运行验证。
+本轮已完成 `info-app` 采集能力的第一版代码骨架和后端 MVP，并已用本机 kind PostgreSQL / Redis 与本地对象存储跑通基础端到端验证。
 
 当前判断：
 
 - 后端代码主体已完成。
-- 数据库 migration 已写好，但未在线执行。
+- 数据库 migration 已在本机 kind PostgreSQL 执行到 head。
 - 后端静态检查和单元测试通过。
 - 前端最小管理页面已写好，依赖安装、`pnpm type-check` 和 `pnpm build-only` 已通过。
 - Elasticsearch/OpenSearch 索引 mapping、写入 adapter、手动重建和 `document_version`
-  增量写入已实现；真实环境联调尚未完成。
-- `knowledge-app` ingestion client 已实现为可配置投递；真实环境联调尚未完成。
+  增量写入已实现；当前验证使用 `SEARCH_BACKEND=disabled`，真实 Elasticsearch 写入仍待联调。
+- `knowledge-app` ingestion client 已实现为可配置投递；真实 ingestion API 联调尚未完成。
 - 完整反爬策略还未实现。
 
 ## 2. 相关路径
@@ -277,29 +277,25 @@ uv run python -c "from app.main import app; print(len(app.routes))"
 
 结果：
 
-- `pytest`：10 passed
+- `pytest`：19 passed
 - `pyright`：0 errors
 - `compileall`：通过
 - `alembic heads`：识别 `20260706_0001`
 - 应用导入：通过
+- `uv run alembic current`：`20260706_0001 (head)`
+- 本地 API：`POST /api/admin/crawl-jobs/{job_id}/run` 抓取 `http://127.0.0.1:18080/` 成功，返回 `status=succeeded`、`http_status=200`，并生成 `document_id` / `document_version_id`
 
-没有完成：
-
-```bash
-uv run alembic upgrade head
-```
-
-原因：当前机器没有可用 PostgreSQL，默认 `localhost:5432` 无响应。
+补充说明：直接抓取 `https://example.com` 在当前本机网络下返回 `ConnectTimeout`，API 已能将其记录为 crawl job 业务失败，不再触发 500。
 
 ## 6. 未完成
 
-必须在另一台机器优先完成：
+迁移到另一台机器时优先确认：
 
-1. 准备 PostgreSQL。
-2. 配置 `DATABASE_URL`。
-3. 执行 `uv run alembic upgrade head`。
+1. 准备 PostgreSQL / Redis。
+2. 配置 `DATABASE_URL` 和 Redis 连接信息。
+3. 执行 `uv run alembic upgrade head`，并确认 `uv run alembic current` 为 `20260706_0001 (head)`。
 4. 启动后端。
-5. 用真实 URL 跑一遍 `crawl_job -> document -> artifact` 闭环。
+5. 用可访问 URL 跑一遍 `crawl_job -> document -> artifact` 闭环。
 6. 检查本地对象存储或 S3 写入 `raw.html`、`headers.json`、`clean.md`、`text.txt`。
 
 仍未实现：
@@ -397,7 +393,7 @@ pnpm build-only
 
 建议下一步优先级：
 
-1. 执行数据库 migration，并用真实 PostgreSQL / S3 / Elasticsearch 跑端到端闭环。
+1. 用真实 S3 / Elasticsearch / knowledge-app ingestion API 做联调。
 2. 前端页面产品化小修。
 3. Scrapy worker。
 4. Playwright worker。
