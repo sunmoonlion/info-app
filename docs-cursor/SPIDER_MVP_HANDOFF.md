@@ -57,7 +57,7 @@ k8s                  984c636
 - Elasticsearch/OpenSearch 索引 mapping、写入 adapter、手动重建和 `document_version`
   增量写入已实现；平台认证、CA 和 alias 运行配置已补齐，并已验证真实 alias 写入权限。
 - `knowledge-app` ingestion client 已实现为可配置投递；真实 ingestion API 联调尚未完成。
-- 来源治理、重复候选、转载关系、实体关联、摘要画像和统一审计日志已完成后端 MVP；前端已补最小治理/画像/Knowledge 分发工作台，完整运营体验仍可继续产品化。
+- 来源治理、重复候选、转载关系、实体关联、摘要画像和统一审计日志已完成后端 MVP；前端已补治理/画像/Knowledge 分发工作台，并支持状态筛选、批量审核、审计时间线和分发详情。
 - 完整反爬策略、真实 Scrapy/Playwright 执行、PDF/Office 转换仍待后续阶段。
 
 ## 2. 相关路径
@@ -260,6 +260,10 @@ info-admin-frontend/src/pages/info/crawl.vue
 - Collector discover。
 - 文件上传。
 - Document 列表查询。
+- Document 状态筛选和多选批量审核。
+- 文档审核、实体链接、摘要画像治理。
+- Knowledge 分发记录创建、投递、失败重试、状态筛选和 payload / 错误详情查看。
+- 治理审计日志时间线展示。
 
 验证：已安装前端依赖，`pnpm type-check` 和 `pnpm build-only` 通过。
 
@@ -278,7 +282,7 @@ info-admin-backend/app/tests/test_upload_helpers.py
 
 ```bash
 uv run pytest
-# 34 passed
+# 36 passed
 
 uv run pyright
 # 0 errors
@@ -325,8 +329,10 @@ uv run python -c "from app.main import app; print(len(app.routes))"
 
 最新结果：
 
-- `pytest`：34 passed
+- `pytest`：36 passed
 - `pyright`：0 errors
+- 前端 `pnpm type-check`：通过
+- 前端 `pnpm build-only`：通过
 - `compileall`：通过
 - `alembic heads`：识别当前 head，包含 `20260707_0002_source_governance`
 - 应用导入：通过
@@ -355,7 +361,7 @@ uv run python -c "from app.main import app; print(len(app.routes))"
 - Scrapy 真实执行。
 - Playwright 真实执行。
 - 完整反爬策略引擎。
-- 前端完整产品化：已补最小治理/画像/Knowledge 分发操作，后续继续打磨筛选、批量操作和审计展示。
+- 前端完整产品化：治理工作台主线已补齐，后续可继续打磨交互密度、批量失败回滚提示、分发对账可视化和更细的空/错/加载态。
 - PDF / Office 真实转换，需要后续对接 `tools-app`。
 
 已补充但待下一轮真实环境验证：
@@ -363,7 +369,7 @@ uv run python -c "from app.main import app; print(len(app.routes))"
 - 部署新版镜像后在集群内确认 Celery worker 后台采集、搜索增量索引和治理 API。
 - 配置 `KNOWLEDGE_APP_INGEST_URL` 后调用真实 `knowledge-app` ingestion API。
 - `distribution_record` 的失败重试和状态对账。
-- 治理操作的前端完整产品化：最小操作面已补，后续补批量处理、审计时间线和更细的错误态。
+- 治理操作的前端完整产品化：主流程已补，后续补真实运行数据下的体验调优和更细的错误态。
 
 ## 7. 下一台机器建议步骤
 
@@ -444,7 +450,7 @@ pnpm build-only
 建议下一步优先级：
 
 1. 部署新版后验证应用内 `document_version` 增量索引和 knowledge-app ingestion API。
-2. 前端治理页面继续产品化：批量处理、审计时间线、分发状态筛选和错误详情。
+2. 前端治理页面用真实数据回归：批量审核、审计时间线、分发状态筛选、错误详情和失败重试。
 3. Scrapy worker：后端已能导入 crawler worker 产出的 `results` / `links`。
 4. Playwright worker：后端已能导入渲染 worker 产出的 `results` / `links`。
 5. 治理增强：K1-K6 已完成，后续可产品化前端治理操作。
