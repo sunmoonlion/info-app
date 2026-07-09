@@ -57,7 +57,7 @@ k8s                  984c636
 - Elasticsearch/OpenSearch 索引 mapping、写入 adapter、手动重建和 `document_version`
   增量写入已实现；平台认证、CA 和 alias 运行配置已补齐，并已验证真实 alias 写入权限。
 - `knowledge-app` ingestion client 已实现为可配置投递；真实 ingestion API 联调尚未完成。
-- 来源治理、重复候选、转载关系、实体关联、摘要画像和统一审计日志已完成后端 MVP；前端只完成来源治理字段，完整治理工作台尚未产品化。
+- 来源治理、重复候选、转载关系、实体关联、摘要画像和统一审计日志已完成后端 MVP；前端已补最小治理/画像/Knowledge 分发工作台，完整运营体验仍可继续产品化。
 - 完整反爬策略、真实 Scrapy/Playwright 执行、PDF/Office 转换仍待后续阶段。
 
 ## 2. 相关路径
@@ -355,7 +355,7 @@ uv run python -c "from app.main import app; print(len(app.routes))"
 - Scrapy 真实执行。
 - Playwright 真实执行。
 - 完整反爬策略引擎。
-- 前端完整产品化。
+- 前端完整产品化：已补最小治理/画像/Knowledge 分发操作，后续继续打磨筛选、批量操作和审计展示。
 - PDF / Office 真实转换，需要后续对接 `tools-app`。
 
 已补充但待下一轮真实环境验证：
@@ -363,7 +363,7 @@ uv run python -c "from app.main import app; print(len(app.routes))"
 - 部署新版镜像后在集群内确认 Celery worker 后台采集、搜索增量索引和治理 API。
 - 配置 `KNOWLEDGE_APP_INGEST_URL` 后调用真实 `knowledge-app` ingestion API。
 - `distribution_record` 的失败重试和状态对账。
-- 治理操作的前端完整产品化。
+- 治理操作的前端完整产品化：最小操作面已补，后续补批量处理、审计时间线和更细的错误态。
 
 ## 7. 下一台机器建议步骤
 
@@ -444,7 +444,7 @@ pnpm build-only
 建议下一步优先级：
 
 1. 部署新版后验证应用内 `document_version` 增量索引和 knowledge-app ingestion API。
-2. 前端页面产品化小修。
+2. 前端治理页面继续产品化：批量处理、审计时间线、分发状态筛选和错误详情。
 3. Scrapy worker：后端已能导入 crawler worker 产出的 `results` / `links`。
 4. Playwright worker：后端已能导入渲染 worker 产出的 `results` / `links`。
 5. 治理增强：K1-K6 已完成，后续可产品化前端治理操作。
