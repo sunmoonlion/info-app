@@ -7,6 +7,9 @@ alwaysApply: false
 # 前端（用户端 SSR / Next.js）
 
 - 技术栈：Next.js + React + shadcn/ui 等以 `app/package.json` 为准；内置 BFF 路由见项目内 `/api/auth/` 等实现。
+- info-app 采用常规平台配对：`info-web-frontend` 是用户侧信息产品前端，优先通过 `info-web-backend` 做 SSR/聚合/用户鉴权。
+- 不把内部采集、治理、分发操作搬到 web-frontend；这些属于 `info-admin-frontend -> info-admin-backend`。
+- web-frontend 只能消费公开/用户侧读接口；若需要后台治理数据，先明确 API 合同和权限边界。
 - 先联调后美化：先打通接口与导航，再抠样式细节。
 - 鉴权：遵循模板既定模式（Casdoor BFF / session）；不随意把 access token 写入 `localStorage`，除非文档明确约定。
 - 请求封装：优先使用项目已有 axios/fetch 封装与 React Query 等模式，避免页面内重复造轮子。

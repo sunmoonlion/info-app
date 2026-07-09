@@ -1,63 +1,71 @@
-# 前端开发计划（FRONTEND PLAN）
+# Info App Frontend Plan
 
-> 确认要做哪些页面、路由、核心组件，以及开发顺序。
+## Decision
 
----
+`info-app` keeps the normal platform pairing:
 
-## 技术栈
+```text
+info-admin-frontend (Vue 3 + Vite + Element Plus)
+  -> info-admin-backend /api/admin/** and document/governance APIs
 
-- 框架：{{Next.js 16 / Nuxt 3 / Vue 3 + Vite}}
-- UI 库：{{shadcn/ui / Element Plus / ...}}
-- 状态管理：{{Zustand / Pinia}}
-- HTTP 客户端：{{axios / ky}}
-- 认证：{{Casdoor OIDC BFF}}
+info-web-frontend (Next.js)
+  -> public/user-facing information product pages
+  -> info-web-backend BFF when SSR, aggregation, public auth, or SEO needs it
+```
 
----
+The v4 `research-app` Agent exception does not automatically apply here. `info-app`
+is an information ingestion and governance product, not a LangGraph runtime. Its
+management workflows belong in the admin pair.
 
-## 路由规划
+## Admin Frontend Scope
 
-| 路由 | 页面 | 是否需要登录 | 优先级 |
-|------|------|------------|--------|
-| `/login` | 登录页 | 否 | P0 |
-| `/dashboard` | 首页/仪表盘 | 是 | P0 |
-| `/{{path}}` | {{页面名}} | 是 | P1 |
+Use `info-admin-frontend` for internal operations:
 
----
+- source registration and governance fields;
+- collector setup and discovery;
+- URL crawl and upload workflows;
+- document review and extraction status;
+- entity links and summary profile edits;
+- Knowledge distribution creation, dispatch, retry, and status inspection;
+- admin-only diagnostics and operational recovery.
 
-## 开发顺序
+The current minimum governance workspace lives in:
 
-### P0：主链路（必须先完成）
+```text
+info-admin-frontend/src/pages/info/crawl.vue
+```
 
-1. **登录页** `/login`
-   - 点击登录 → 跳转 Casdoor
-   - 回调处理（BFF 模式）
-   - 未登录跳转守卫
+Next admin productization steps:
 
-2. **{{核心页面 1}}** `/{{path}}`
-   - {{主要功能点}}
+1. Add filters for document status, source, extraction status, and distribution status.
+2. Add batch review/distribution operations.
+3. Add audit timeline display from document metadata/status history.
+4. Split the current single page when the workflow becomes crowded.
 
-### P1：核心功能
+## Web Frontend Scope
 
-3. **{{页面名}}** `/{{path}}`
-   - {{主要功能点}}
+Use `info-web-frontend` for user-facing information experiences:
 
-### P2：次要功能
+- search/browse published information;
+- topic/source landing pages;
+- SEO/SSR pages;
+- user-facing reading and saved views;
+- public or tenant-facing pages that should not expose admin operations.
 
-4. **{{页面名}}** `/{{path}}`
-   - {{主要功能点}}
+`info-web-frontend` should not call admin governance endpoints directly. If it
+needs aggregation, SSR, or public-user auth, use `info-web-backend` as the BFF.
 
----
+## API Boundary Rules
 
-## 公共组件
+- Admin UI may use `info-admin-backend` admin/governance APIs.
+- Web UI may use `info-web-backend` or explicitly public read APIs only.
+- Do not move internal governance operations into `info-web-frontend`.
+- Do not bypass `info-web-backend` for public SSR/auth aggregation unless a
+  documented read-only public API exists.
 
-| 组件 | 用途 | 依赖页面 |
-|------|------|---------|
-| `<Layout>` | 全局布局（导航 + 内容区） | 所有登录后页面 |
-| `<AuthGuard>` | 未登录跳转守卫 | 所有需要登录的页面 |
-| `{{组件名}}` | {{用途}} | {{依赖页面}} |
+## Validation
 
----
-
-## 不做
-
-- {{明确排除的功能，e.g. 移动端适配、国际化（Phase 1 不做）}}
+- `info-admin-frontend`: run `pnpm type-check` and `pnpm build-only` after UI changes.
+- `info-web-frontend`: run `pnpm typecheck` and `pnpm build` after UI changes.
+- Deployment image changes should use a new semver tag rather than silently
+  overwriting a validated tag when behavior changes.

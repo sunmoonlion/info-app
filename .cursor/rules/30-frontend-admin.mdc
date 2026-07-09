@@ -7,6 +7,8 @@ alwaysApply: false
 # 前端（管理端 CSR）
 
 - 技术栈：Vue 3 + Vite + Element Plus 等以子模块现有依赖为准。
+- info-app 采用常规平台配对：采集、来源治理、文档审核、实体/摘要画像、Knowledge 分发等内部操作属于 `info-admin-frontend -> info-admin-backend`。
+- admin-frontend 可以消费 admin/governance API；不要把内部治理操作迁到 `info-web-frontend`。
 - 先联调后美化：先保证页面可用、接口打通，再做视觉细节。
 - 接口适配：统一封装请求、鉴权、错误提示，避免页面内散落裸 HTTP。
 - 与后端对齐：字段名、状态码、分页结构以后端与 `API_CONTRACT` 为准。
