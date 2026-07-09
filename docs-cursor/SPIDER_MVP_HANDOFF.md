@@ -34,8 +34,8 @@ k8s                  984c636
 - `deploy-info-app-all.sh --cluster KIND validate-resources` 通过。
 - `info-admin-backend:1.0.1` 已构建并推送到 Harbor；最终 digest 为
   `sha256:543b03956d718cdfb57c8fc4af2fd81252ceecb7ee544cf858802d552bafc20a`。
-- `info-admin-frontend:1.0.1` 已用本地已验证 `dist` 的 runtime-only 构建路径打包并推送到 Harbor；digest 为
-  `sha256:a27b08cf64990b011857d854f1c592fdc72622c0b6749307c9d29665614ae7c1`。
+- `info-admin-frontend:1.0.1` 已用标准多阶段 Dockerfile 构建并推送到 Harbor；digest 为
+  `sha256:36c4d4f96febbe240ec7c0b979b90c427b0bf239e40259989f04bc7f790ca0cf`。
 - KIND 当前 `info-admin-backend`、`celeryworker-info-admin-backend`、`info-admin-frontend` 均运行 `1.0.1`；web 侧组件保持 `1.0.0`。
 - 集群内 Alembic `upgrade head` 和 `current` 通过，当前版本为 `20260707_0002 (head)`。
 - 部署态 smoke 通过：创建 source、上传 Markdown、S3 artifact 查询、document/version 查询、document review、entity-links、summary-profile、version review、Elasticsearch alias rebuild 全部成功。
