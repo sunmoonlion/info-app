@@ -2,6 +2,8 @@
 
 日期：2026-07-07
 
+更新：2026-07-09，已在 `codex-1` 恢复并完成 KIND 部署验证。
+
 ## 0. 暂停交接快照
 
 本轮先暂停，不再继续部署或扩功能。代码已由用户推送到 Gitee 的
@@ -24,6 +26,21 @@ k8s                  984c636
 4. 在集群内执行/确认 Alembic migration 到 head。
 5. 用平台 PostgreSQL、S3、RabbitMQ、Elasticsearch 跑一遍端到端采集、索引和治理 API smoke test。
 
+2026-07-09 恢复结果：
+
+- 后端 `uv run pytest` 通过：36 passed。
+- 后端 `uv run pyright` 通过：0 errors。
+- 前端 `pnpm type-check` 和 `pnpm build-only` 通过。
+- `deploy-info-app-all.sh --cluster KIND validate-resources` 通过。
+- `info-admin-backend:1.0.1` 已构建并推送到 Harbor；最终 digest 为
+  `sha256:543b03956d718cdfb57c8fc4af2fd81252ceecb7ee544cf858802d552bafc20a`。
+- `info-admin-frontend:1.0.1` 已用本地已验证 `dist` 的 runtime-only 构建路径打包并推送到 Harbor；digest 为
+  `sha256:a27b08cf64990b011857d854f1c592fdc72622c0b6749307c9d29665614ae7c1`。
+- KIND 当前 `info-admin-backend`、`celeryworker-info-admin-backend`、`info-admin-frontend` 均运行 `1.0.1`；web 侧组件保持 `1.0.0`。
+- 集群内 Alembic `upgrade head` 和 `current` 通过，当前版本为 `20260707_0002 (head)`。
+- 部署态 smoke 通过：创建 source、上传 Markdown、S3 artifact 查询、document/version 查询、document review、entity-links、summary-profile、version review、Elasticsearch alias rebuild 全部成功。
+- smoke 样本：`source_code=codex-smoke-ea535169`，`document_id=6123db9b-a6cc-4503-bfb2-dce516ed1a41`，`version_id=7d425744-0ed1-4b91-831d-ca5253f6ce20`，artifact 数量 15，`development-info-app-information-write` 重建 indexed=5、failed=0。
+
 本文用于把 `info-app` 的采集与资讯治理 MVP 迁移到另一台机器后继续实施。
 
 ## 1. 总体状态
@@ -36,6 +53,7 @@ k8s                  984c636
 - 数据库 migration 已在本机 kind PostgreSQL 执行到 head，并已用普通应用用户在全新临时库验证通过；当前 head 包含 `20260707_0002_source_governance`。
 - 后端静态检查和单元测试通过。
 - 前端最小管理页面已写好，依赖安装、`pnpm type-check` 和 `pnpm build-only` 已通过。
+- KIND 部署验证已恢复完成；admin API、Celery worker、admin frontend 已更新到 `1.0.1`。
 - Elasticsearch/OpenSearch 索引 mapping、写入 adapter、手动重建和 `document_version`
   增量写入已实现；平台认证、CA 和 alias 运行配置已补齐，并已验证真实 alias 写入权限。
 - `knowledge-app` ingestion client 已实现为可配置投递；真实 ingestion API 联调尚未完成。
