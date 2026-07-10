@@ -45,10 +45,11 @@ k8s                  984c636
 
 - `info-admin-frontend:1.0.1` 运行中镜像 digest 为 `sha256:3ce28192f97bd38a46d47b3bc357b9d826f219cff79fa47bd05dbdb84180bc98`，容器静态产物已确认包含“批量审核 / 审计 / 分发详情”等本轮治理工作台 UI。
 - KIND 中 `info-admin-backend-config` / `info-admin-backend-secret` 已应用 `KNOWLEDGE_APP_INGEST_URL`、`KNOWLEDGE_APP_TIMEOUT_SECONDS`、`KNOWLEDGE_APP_API_KEY`，并已重启 `info-admin-backend` 与 `celeryworker-info-admin-backend`。
-- 后端 Pod 环境变量确认：`KNOWLEDGE_APP_INGEST_URL=`、`KNOWLEDGE_APP_TIMEOUT_SECONDS=20`、`KNOWLEDGE_APP_API_KEY=`。
+- 后端 ConfigMap 确认：`KNOWLEDGE_APP_INGEST_URL=http://knowledge-admin-backend:8000/api/knowledge/ingestions`、`KNOWLEDGE_APP_TIMEOUT_SECONDS=20`。
 - 集群内 Alembic `upgrade head` / `current` 通过，当前版本仍为 `20260707_0002 (head)`。
-- 部署态 smoke 通过：创建 source、Markdown 上传、document/version/artifact 查询、document review、entity-links、summary-profile、Knowledge distribution 创建与 `status=pending` 查询全部成功。
+- 部署态 smoke 通过：创建 source、Markdown 上传、document/version/artifact 查询、document review、entity-links、summary-profile、Knowledge distribution 创建与真实 `knowledge-app` ingestion API 投递全部成功。
 - smoke 样本：`source_code=codex-smoke-496e04fd`，`document_id=a27eba8b-20db-463b-b75e-6f3c49d53d35`，`version_id=ef23fdc1-eaa9-436d-a9c6-b7eb67ae0870`，`distribution_id=d6c57bb3-786e-4d8c-be81-bff3cf6d54ac`，artifact 数量 3，audit_log 数量 3。
+- 真实 ingestion smoke：`distribution_id=bcaad877-ee79-4aca-ba1b-b115480098b8`，`target_dataset=codex-smoke-v2`，`distribution_record.status=succeeded`，`knowledge_ingestion_job.id=ed88d1a0-c339-430b-83af-8d1cdcbfd0cd`，`knowledge_ingestion_job.status=accepted`。
 
 本文用于把 `info-app` 的采集与资讯治理 MVP 迁移到另一台机器后继续实施。
 
@@ -65,7 +66,7 @@ k8s                  984c636
 - KIND 部署验证已恢复完成；admin API、Celery worker、admin frontend 已更新到 `1.0.1`。
 - Elasticsearch/OpenSearch 索引 mapping、写入 adapter、手动重建和 `document_version`
   增量写入已实现；平台认证、CA 和 alias 运行配置已补齐，并已验证真实 alias 写入权限。
-- `knowledge-app` ingestion client 已实现为可配置投递；真实 ingestion API 联调尚未完成。
+- `knowledge-app` ingestion client 已实现为可配置投递；真实 ingestion API 联调已完成，info-app 标准 payload 可被 knowledge-app 接收并返回 `202 Accepted`。
 - 来源治理、重复候选、转载关系、实体关联、摘要画像和统一审计日志已完成后端 MVP；前端已补治理/画像/Knowledge 分发工作台，并支持状态筛选、批量审核、审计时间线和分发详情。
 - 完整反爬策略、真实 Scrapy/Playwright 执行、PDF/Office 转换仍待后续阶段。
 
@@ -373,10 +374,14 @@ uv run python -c "from app.main import app; print(len(app.routes))"
 - 前端完整产品化：治理工作台主线已补齐，后续可继续打磨交互密度、批量失败回滚提示、分发对账可视化和更细的空/错/加载态。
 - PDF / Office 真实转换，需要后续对接 `tools-app`。
 
-已补充但待下一轮真实环境验证：
+已补充并通过真实环境验证：
 
 - 配置非空 `KNOWLEDGE_APP_INGEST_URL` 后调用真实 `knowledge-app` ingestion API。
-- `distribution_record` 对真实 `knowledge-app` 的失败重试和状态对账。
+- `distribution_record` 对真实 `knowledge-app` 的成功状态对账。
+
+仍待后续产品化验证：
+
+- `distribution_record` 对真实 `knowledge-app` 的失败重试和错误详情对账。
 - 治理操作的前端完整产品化：主流程已补，后续补真实运行数据下的体验调优和更细的错误态。
 
 ## 7. 下一台机器建议步骤
@@ -457,8 +462,8 @@ pnpm build-only
 
 建议下一步优先级：
 
-1. 部署新版后验证应用内 `document_version` 增量索引和 knowledge-app ingestion API。
-2. 前端治理页面用真实数据回归：批量审核、审计时间线、分发状态筛选、错误详情和失败重试。
+1. 前端治理页面用真实数据回归：批量审核、审计时间线、分发状态筛选、错误详情和失败重试。
+2. knowledge-app ingestion 后续接入真实解析 / chunk / RAGFlow 索引 worker，并把 `accepted` 推进到 `running/succeeded/failed`。
 3. Scrapy worker：后端已能导入 crawler worker 产出的 `results` / `links`。
 4. Playwright worker：后端已能导入渲染 worker 产出的 `results` / `links`。
 5. 治理增强：K1-K6 已完成，后续可产品化前端治理操作。

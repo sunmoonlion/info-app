@@ -9,6 +9,10 @@
 
 ### Added
 - 初始化 `docs-cursor/` 文档体系
+- `info-app -> knowledge-app` 真实 ingestion smoke 已通过：info 标准 payload 投递到 `knowledge-admin-backend`，`distribution_record.status=succeeded`，knowledge ingestion job 返回 `202 Accepted`。
+
+### Changed
+- `SPIDER_MVP_HANDOFF.md` 更新真实 knowledge ingestion 联调状态，移除“尚未完成”的过期描述。
 
 ---
 
