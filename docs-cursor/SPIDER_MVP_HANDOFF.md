@@ -41,6 +41,15 @@ k8s                  984c636
 - 部署态 smoke 通过：创建 source、上传 Markdown、S3 artifact 查询、document/version 查询、document review、entity-links、summary-profile、version review、Elasticsearch alias rebuild 全部成功。
 - smoke 样本：`source_code=codex-smoke-ea535169`，`document_id=6123db9b-a6cc-4503-bfb2-dce516ed1a41`，`version_id=7d425744-0ed1-4b91-831d-ca5253f6ce20`，artifact 数量 15，`development-info-app-information-write` 重建 indexed=5、failed=0。
 
+2026-07-10 收尾验证：
+
+- `info-admin-frontend:1.0.1` 运行中镜像 digest 为 `sha256:3ce28192f97bd38a46d47b3bc357b9d826f219cff79fa47bd05dbdb84180bc98`，容器静态产物已确认包含“批量审核 / 审计 / 分发详情”等本轮治理工作台 UI。
+- KIND 中 `info-admin-backend-config` / `info-admin-backend-secret` 已应用 `KNOWLEDGE_APP_INGEST_URL`、`KNOWLEDGE_APP_TIMEOUT_SECONDS`、`KNOWLEDGE_APP_API_KEY`，并已重启 `info-admin-backend` 与 `celeryworker-info-admin-backend`。
+- 后端 Pod 环境变量确认：`KNOWLEDGE_APP_INGEST_URL=`、`KNOWLEDGE_APP_TIMEOUT_SECONDS=20`、`KNOWLEDGE_APP_API_KEY=`。
+- 集群内 Alembic `upgrade head` / `current` 通过，当前版本仍为 `20260707_0002 (head)`。
+- 部署态 smoke 通过：创建 source、Markdown 上传、document/version/artifact 查询、document review、entity-links、summary-profile、Knowledge distribution 创建与 `status=pending` 查询全部成功。
+- smoke 样本：`source_code=codex-smoke-496e04fd`，`document_id=a27eba8b-20db-463b-b75e-6f3c49d53d35`，`version_id=ef23fdc1-eaa9-436d-a9c6-b7eb67ae0870`，`distribution_id=d6c57bb3-786e-4d8c-be81-bff3cf6d54ac`，artifact 数量 3，audit_log 数量 3。
+
 本文用于把 `info-app` 的采集与资讯治理 MVP 迁移到另一台机器后继续实施。
 
 ## 1. 总体状态
@@ -366,9 +375,8 @@ uv run python -c "from app.main import app; print(len(app.routes))"
 
 已补充但待下一轮真实环境验证：
 
-- 部署新版镜像后在集群内确认 Celery worker 后台采集、搜索增量索引和治理 API。
-- 配置 `KNOWLEDGE_APP_INGEST_URL` 后调用真实 `knowledge-app` ingestion API。
-- `distribution_record` 的失败重试和状态对账。
+- 配置非空 `KNOWLEDGE_APP_INGEST_URL` 后调用真实 `knowledge-app` ingestion API。
+- `distribution_record` 对真实 `knowledge-app` 的失败重试和状态对账。
 - 治理操作的前端完整产品化：主流程已补，后续补真实运行数据下的体验调优和更细的错误态。
 
 ## 7. 下一台机器建议步骤
@@ -458,16 +466,15 @@ pnpm build-only
 
 ## 8. 当前 Git 状态
 
-暂停时四个仓库均已推送到 `origin/codex-1`：
+截至 2026-07-10，本轮 `info-app` 收尾代码与配置已推送到 `origin/codex-1`，随后又追加了本文档的部署态 smoke 记录。相关分支头以各仓库当前提交为准，核心子仓当前头包括：
 
 ```text
-info-admin-backend   55bf97c
-info-admin-frontend  a40d0b2
-info-app             23b0f5f
-k8s                  984c636
+info-admin-backend   bc05d00
+info-admin-frontend  fd3a943
+k8s                  d8b193c
 ```
 
-本次交接文档更新完成后，需要再提交/推送文档提交；除此之外不要继续改功能代码。
+本文档提交后，如需远端留痕，只需要推送 `info-app` 父仓 `codex-1`。
 
 ## 9. 架构边界
 
