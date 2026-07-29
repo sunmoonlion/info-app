@@ -5,7 +5,7 @@
   "task": "V5-P0-009E",
   "component_commits": {
     "info-admin-frontend": "90af7729f6f02e82d1a84f213ce8d8340fe3111d",
-    "info-admin-backend": "ee4b6d8b8fd625a602a6c277c9cdb96b1ded51ae",
+    "info-admin-backend": "0d2c864edb660d248de52ae94610810405f74c2b",
     "info-web-frontend": "52dbb5a3c8d0483abd3d85c4a284dfe58b0d83c0",
     "info-web-backend": "a142106e5cedf8e258bd2b89744744c0448e2e64"
   },
