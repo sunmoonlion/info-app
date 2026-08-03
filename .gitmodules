@@ -1,12 +1,12 @@
 [submodule "info-admin-frontend"]
 	path = info-admin-frontend
-	url = https://gitee.com/sunmoonlion/info-admin-frontend.git
+	url = https://github.com/sunmoonlion/info-admin-frontend.git
 [submodule "info-web-backend"]
 	path = info-web-backend
-	url = https://gitee.com/sunmoonlion/info-web-backend.git
+	url = https://github.com/sunmoonlion/info-web-backend.git
 [submodule "info-web-frontend"]
 	path = info-web-frontend
-	url = https://gitee.com/sunmoonlion/info-web-frontend.git
+	url = https://github.com/sunmoonlion/info-web-frontend.git
 [submodule "info-admin-backend"]
 	path = info-admin-backend
-	url = https://gitee.com/sunmoonlion/info-admin-backend.git
+	url = https://github.com/sunmoonlion/info-admin-backend.git
