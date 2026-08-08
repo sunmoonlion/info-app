@@ -7,6 +7,6 @@
 [submodule "info-web-frontend"]
 	path = info-web-frontend
 	url = https://github.com/sunmoonlion/info-web-frontend.git
-[submodule "info-admin-backend"]
-	path = info-admin-backend
-	url = https://github.com/sunmoonlion/info-admin-backend.git
+[submodule "info-backend"]
+	path = info-backend
+	url = https://github.com/sunmoonlion/info-backend.git
