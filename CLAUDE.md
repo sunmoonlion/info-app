@@ -1,5 +1,8 @@
 # info-app — AI 协作上下文
 
+> 协作规则唯一权威 = `/home/zymun/k8s/sunmoonai/docs/sunmoonai-architecture/AGENTS.md`
+> （见仓根 AGENTS.md）；本文件与本仓其他文档与其矛盾时，以权威入口为准。
+
 本文件只提供仓库级入口，不维护独立于其他 AI 工具的项目事实。
 
 ## 开始任务前
