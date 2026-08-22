@@ -362,7 +362,7 @@ uv run python -c "from app.main import app; print(len(app.routes))"
 恢复时优先确认：
 
 1. 先不要假设 git push 已经更新运行中服务；当前集群仍可能跑旧镜像。
-2. 选择合适窗口后，用 `~/k8s/sunmoonai/app-platform/info-app/deploy-info-app-all.sh --cluster KIND` 构建/部署新版镜像。
+2. 选择合适窗口后，用 `~/master/k8s/sunmoonai/app-platform/info-app/deploy-info-app-all.sh --cluster KIND` 构建/部署新版镜像。
 3. 执行或确认集群 Alembic migration 到 head。
 4. 用可访问 URL 跑一遍 `crawl_job -> document_version -> search index -> governance metadata` 闭环。
 5. 检查平台 S3 写入 `raw.html`、`headers.json`、`clean.md`、`text.txt`。
