@@ -3,13 +3,13 @@
   "kind": "development-source-lock",
   "repository": "info-app",
   "formal_release": false,
-  "task": "v5-backlog-b2.1-luna-20260912",
+  "task": "v5-backlog-b2.2-luna-20260912",
   "release_boundary": "Source-only development candidate; historical formal release and deployed images are unchanged.",
   "components": [
     {
       "path": "info-backend",
-      "commit": "19243109988f949c6d9520c14f03cb0e2f6fe8fc",
-      "tree": "5939fa853b90c94b9d187bcc97fc18a1da48b428",
+      "commit": "33f4a1f9444b89f41eaf00a2c4256d76e78b4881",
+      "tree": "7b04fb4441600c6eebcf0b0562d0f66d099286ab",
       "remote_branch": "origin/luna/durable-delivery-20260911-local"
     },
     {
