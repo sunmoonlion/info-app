@@ -1,5 +1,70 @@
 # Info 模板对齐：可靠投递开发候选
 
+## 2026-09-13 暂停集成
+
+所有者改为暂停并同步现有成果，本次父仓固定后端 `5fb909b6a012bfa62d1002abb6deb3fd9e3dc016`。
+后续 B7u 固定完整回归 503 passed / 0 skipped；累计证据与未完项见 k8s
+`sunmoonai/docs/v5-backlog-disposition-luna.md` 和 `v5-backlog-joint-runtime-identity-luna.md`。
+下文“本地/尚未推送”保留为各包当时历史；源码同步不是正式镜像发布或业务身份切换。
+
+## 2026-09-13 B7j 回执进展（本地，未发布）
+
+最终固定检查点 `info-backend@7dafb34ca70d1f71ebc332315bf0c7584b9c3092`，模板
+`a91eb3e284ae91d4bc6b82fe567c4163cfa728f0` 修订后 255 项先过，本仓再完整
+**500 passed / 0 skipped，83.31 秒**，Ruff/Pyright 通过。修订只将 gauge 下降用例
+改为移除隔离合成回执，不假定域 Outbox 可直接删除；归档只读保护和正式逻辑不动。
+以下保留首轮候选历史；最终门禁以本段为准。
+
+模板 `tpl-backend@a37835132217d8458a7440532f07d437a4684e3b` 固定全量 255 项先通过，
+Info `info-backend@8baeefc432ca653bb670cf1fca9cbe4256c376a9` 完整
+**500 passed / 0 skipped，83.74 秒**，Ruff/Pyright 通过。
+共享观测器增加精确已提交 Inbox 数量/最大记录时间，保留 gauge 和无回执策略；
+非有限回执使采集失败。两文件增量及四个新测试文件同步，不新增业务表或身份。
+差异分类：原抓取/分发 handler、consumer 和租约领域扩展保留；无配置新增差异、
+临时兼容或公共增量违规漂移，不声明全仓相同。
+真实 prefork 暂停/父进程 pong/恢复、重复消费和回滚通过；测试替换的只是隔离存储及
+合成 handler，既有真实 PG/S3 和契约套件仍执行。回执不是业务成功量、per-worker
+健康或真实 Provider/部署验收，监控接线仍未来 N4-OPS-01。
+六文件固定证据见 k8s `sunmoonai/docs/v5-backlog-worker-progress-luna.md`；
+父仓 gitlink 不暂存、master 不改、不推送，等待最终统一集成。
+
+## 2026-09-13 B7i 本地增量（尚未发布）
+
+模板固定 `tpl-backend@ed157e41f11e5e20e6b77812890cb55d382b58f4` 全量 243 项通过后，
+Info 同步为 `info-backend@0a6675d679e59ead6153386e898aed3c1dc0825e`；固定提交
+Ruff/Pyright 通过，完整 **488 passed / 0 skipped，74.92 秒**。
+五个新增 Scheduler 活动/CLI/测试/说明文件逐字同步，bootstrap 仅加观察类选择。
+差异分类：Info 领域任务、handler 与调度清单保留；配置无新增差异，使用原 schedule
+路径；无临时兼容层或公共增量违规漂移。此为六文件增量，不宣称全仓相同。
+
+真实本仓 Beat 向合成队列发布、暂停/恢复/重启活动探针及既有真实 PG/S3/契约均通过。
+循环返回、发送调用返回/异常分别记录，不当 Worker 业务完成或实际 KIND 探针验收；
+无镜像/部署/迁移/身份修改。监控安装/采集/告警送达由未来 N4-OPS-01 接收，未实施。
+本地提交与证据见 k8s `sunmoonai/docs/v5-backlog-scheduler-activity-luna.md`；
+父仓 gitlink 不暂存、不推送，master 和云端留待最终统一集成。
+
+## 2026-09-13 B7h 本地增量（尚未发布）
+
+模板 `c66654a591b186ac814cadb907defc421e94aba6` → Info
+`da870e0f1fa243d5b06e4de7b28a5c7d86a85c46`，严格等模板全量通过后实施。
+新增服务身份保护的 `GET /api/internal/v1/delivery/metrics`，需要 `delivery:observe`；
+复用只读 collector/已有 API 池，每进程单个在途采集，失败不输出假零或旧快照。
+公共 endpoint、24 项 HTTP 测试、观测说明三文件与模板 SHA-256 完全一致；路由/响应头
+仅加同一增量，不改 Info handler、采集/分发、Provider 或领域路由。旧“Internal 无
+router”的休眠声明随能力激活改为正向检查，与指南同步；不是绕过门禁。
+
+差异分类：领域扩展保留；Info 身份/audience 配置保留且不默认授予 scope；无新增暂时
+兼容层；本包公共三文件无违规漂移。前端、迁移、部署与依赖未变。首轮 Ruff/Pyright
+通过，完整回归 444 passed / 0 skipped（59.94 秒），固定提交复验回执见 k8s
+`sunmoonai/docs/v5-backlog-metrics-http-luna.md`。本节不替代历史全量比较。
+父仓 gitlink、master、远端及云端仍不更新，等待本轮剩余处置完成后一次性集成。
+
+复验新增失败已处置：旧 readiness 测试的 50 ms 注入泄漏到正常恢复阶段，模板用
+100 ms 合成正常延迟稳定复现后修复上下文范围；另统一观测 statement-timeout 的
+恢复预算。Info 最终本地检查点 `a9f0d7b262e00b39b163c69dbaf39d2966679478`，
+固定提交 Ruff/Pyright 通过，445 passed / 0 skipped（61.77 秒）；正式超时未改。
+两个修正测试与模板完全一致，本节上面的 444 项是失败发现前的首轮历史，不是最终状态。
+
 日期：2026-09-11；模板公共投递基线 `tpl-backend@b667a41`，另包含本轮先在模板
 通过验证的开发镜像标签保护。本文是源码接入与开发验证报告，不是正式发布批准。
 
@@ -61,6 +126,9 @@
 - 备份恢复：此前同迁移源码的完整测试库实际恢复，新库 counter/outbox/inbox=1/1/1。
 - Calico v3.28.2 独立集群：内部/前端到 Backend 放行，无标签拒绝；仅 Worker 可达
   Knowledge。首次允许探针失败原因未证实；保留失败记录，第二次全量通过。
+  以上为当时记录；2026-09-13 B7g 已实际复现首探针 DNS 解析失败，修复 DNS 前置门禁、
+  拒绝判定和诊断/清理安全，并在第二个全新 Calico 集群通过当前 Info 策略的六条流向。
+  证据见 k8s 的 v5-backlog-network-gate-luna.md；不追认已丢失原始现场的具体 DNS RCODE。
 - 六个组件的开发脚本均验证正式标签拒绝；隔离 Redis 验证本地和生成的 k8s 客户端
   命令收回旧频道授权、保留目标频道。未验证 ACL 重启持久化。
 
@@ -121,3 +189,18 @@ JSON/Prometheus text 只读输出当前账本 gauge，真实 PG/S3 和契约回�
 此为增量对齐，不代表全仓代码相同或 KIND/真实身份/发布回滚已重验。
 本包不修改业务数据、API、迁移、前端、跨仓 DTO 或旧 release/bundle；实例探针须在下次
 联合新镜像发布时接线，不能对旧镜像单独换命令。消费进展/Scheduler/采集/告警仍单列。
+
+
+## 2026-09-13 B7f：显式投递状态与时钟回退
+
+模板本地固定 `tpl-backend@1c5173b` 先过 176 项完整门禁，再串行 Info→Knowledge→Investment。
+本仓本地固定 `info-backend@fbb48ef` 全量 **421 passed / 0 skipped**，Ruff/Pyright 通过。
+公共四生产文件、9 项故障回归及说明六文件与模板 SHA-256 一致。
+新增一项调用原抓取取消场景的故障回归；领域来源锁和 handler 未改。
+没有新增配置差异、临时兼容或违规漂移；这是增量对齐，不重新声称全仓相同。
+
+释放使用负无穷而不删除 epoch 行，立即入队/重放/对账不添加墙钟门槛；真正预约与退避保留。
+原失败断言未改，先在旧代码确定性复现再验证修复；详细记录在 k8s 的
+v5-backlog-clock-regression-luna.md。没有改系统校时、迁移/前端/契约/Secret/镜像或业务部署。
+本轮按所有者要求只保存本地 Luna 候选，父仓 gitlink 暂未更新，未合并 master 或推送同步；
+待剩余处置完成后统一集成。真实身份/KIND/发布回滚与运行监控不因本次通过而自动销账。
