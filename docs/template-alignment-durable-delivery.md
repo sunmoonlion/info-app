@@ -68,3 +68,16 @@
 明确 `formal_release=false`，不能替代发布锁。Info 后端 `6f5bffc`、Admin `04ae25c`、
 Web `f3ebbc3` 已推送 `luna/durable-delivery-20260911-local`，供父仓固定 gitlink。
 跨 App 最终收口尚未完成；不能只凭本文宣称 master 或所有 worktree 已同步。
+
+## 2026-09-13 B7a：公共日志增量对齐
+
+本节不改写以上 2026-09-11 历史证据。模板固定 `tpl-backend@553c36b`，
+Info 固定 `info-backend@f2c4001`；日志策略、Postgres 包装器、专项测试和说明逐字相同。
+Worker 只同步信号注册，保留 crawl/distribution/search 领域任务；此差异属领域扩展。
+无新增配置差异、临时兼容或违规漂移；没有以本次增量对齐重新宣称全仓对齐。
+
+模板固定提交 88 passed 后串行同步 Info；Info 静态检查通过，固定提交全量
+**301 passed / 0 skipped**（25.56 秒），真实一次性 PG/S3 与共享契约向量。
+其中新增 8 项覆盖 API/Celery INFO/DEBUG、日志重初始化与告警保留。
+无前端/迁移/契约变化；本轮没有 KIND、真实身份、发布回滚或业务数据验收。
+关闭 SQL echo 和 SQL/HTTP INFO 不等于完整脱敏、指标或告警建设，部署仍待受控发布。
