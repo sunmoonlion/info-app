@@ -107,3 +107,16 @@ delivery_observers 扩展点、24 项专项测试及说明。实例三个 topic 
 JSON/Prometheus text 只读输出当前账本 gauge，真实 PG/S3 和契约回归通过；没有业务数据
 访问、KIND/真实身份/部署回滚或 scrape/告警接线验收。B7c 逻辑去重保持通过，B7b 那条
 “待修复”是历史时点；本包不以只读聚合结果证明 Worker/Scheduler 正常或授权归档删除。
+
+## 2026-09-13 B7e：Worker 消费配置检查增量
+
+模板固定 `tpl-backend@5369862` 全量 167 项先通过；Info 固定 `info-backend@7755da2`
+全量 **411 passed / 0 skipped**（57.14 秒），Ruff/Pyright 通过。
+新增 worker_readiness CLI、35 项单元、1 项真实 RabbitMQ/本仓 prefork Worker 测试及说明，
+四文件与模板逐字同步；另同步既有观测测试的局部 monkeypatch 故障作用域修正，生产预算不改。
+测试验证 pong 仍通但无/错队列时拒绝就绪、恢复通过、错节点/停止/断连失败、超时及安全输出。
+
+领域扩展保留，所需任务直接来自本仓 `app.tasks.*`；无额外配置、临时兼容或违规漂移。
+此为增量对齐，不代表全仓代码相同或 KIND/真实身份/发布回滚已重验。
+本包不修改业务数据、API、迁移、前端、跨仓 DTO 或旧 release/bundle；实例探针须在下次
+联合新镜像发布时接线，不能对旧镜像单独换命令。消费进展/Scheduler/采集/告警仍单列。
