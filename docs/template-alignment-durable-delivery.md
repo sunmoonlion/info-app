@@ -94,3 +94,16 @@ Worker 只同步信号注册，保留 crawl/distribution/search 领域任务；�
 API ready 只读校验精确 revision，三别名不改；依赖检查总计 2 秒协作式超时，live 不变。
 无迁移文件/前端/契约/部署变更，业务 API principal 权限和 KIND/身份/发布回滚未重验。
 Info 重复创建逻辑分发的独立缺口仍待后续修复，本包不以健康检查测试替代该项验收。
+
+## 2026-09-13 B7d：只读投递观测增量对齐
+
+模板固定 `tpl-backend@1f8941f` 的 131 项先通过；Info 固定 `info-backend@9ea1c5e`
+全量 **375 passed / 0 skipped**（41.51 秒），Ruff/Pyright 通过。
+5 个新文件与模板逐字相同：delivery_metrics CLI、delivery_observation 聚合器、
+delivery_observers 扩展点、24 项专项测试及说明。实例三个 topic 来自原 handler 注册，
+不另建配置列表；不修改领域实现、迁移、API、前端或契约。
+
+领域扩展仍由既有 handler 提供；本增量无配置差异、临时兼容或违规漂移，不代表全仓重验。
+JSON/Prometheus text 只读输出当前账本 gauge，真实 PG/S3 和契约回归通过；没有业务数据
+访问、KIND/真实身份/部署回滚或 scrape/告警接线验收。B7c 逻辑去重保持通过，B7b 那条
+“待修复”是历史时点；本包不以只读聚合结果证明 Worker/Scheduler 正常或授权归档删除。
