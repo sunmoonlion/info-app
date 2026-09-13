@@ -81,3 +81,16 @@ Worker 只同步信号注册，保留 crawl/distribution/search 领域任务；�
 其中新增 8 项覆盖 API/Celery INFO/DEBUG、日志重初始化与告警保留。
 无前端/迁移/契约变化；本轮没有 KIND、真实身份、发布回滚或业务数据验收。
 关闭 SQL echo 和 SQL/HTTP INFO 不等于完整脱敏、指标或告警建设，部署仍待受控发布。
+
+## 2026-09-13 B7b：API schema readiness 增量对齐
+
+模板固定 `tpl-backend@ed8d5dc` 的 107 项回归先通过；Info 固定
+`info-backend@96e3762` 全量 **320 passed / 0 skipped**（30.08 秒），Ruff/Pyright 通过。
+共 4 文件：schema_readiness、测试、说明逐字同步，API factory 只加入相同健康检查增量；
+包名、路由及领域扩展保留。各 App 的期望 revision 由自身迁移链导出，不复制模板 revision。
+没有新增配置/兼容项/违规漂移；新增 19 项，真实一次性 PG 迁移/降级再升级、仅 SELECT
+角色、阻塞超时和恢复，加既有 S3/契约完整回归。本次是增量对齐，不重新宣称全仓相同。
+
+API ready 只读校验精确 revision，三别名不改；依赖检查总计 2 秒协作式超时，live 不变。
+无迁移文件/前端/契约/部署变更，业务 API principal 权限和 KIND/身份/发布回滚未重验。
+Info 重复创建逻辑分发的独立缺口仍待后续修复，本包不以健康检查测试替代该项验收。
