@@ -112,6 +112,7 @@ JSON/Prometheus text 只读输出当前账本 gauge，真实 PG/S3 和契约回�
 
 模板固定 `tpl-backend@5369862` 全量 167 项先通过；Info 固定 `info-backend@7755da2`
 全量 **411 passed / 0 skipped**（57.14 秒），Ruff/Pyright 通过。
+消除 WSL 双重校时冲突后同提交再跑 **411 passed / 0 skipped**（54.77 秒）。
 新增 worker_readiness CLI、35 项单元、1 项真实 RabbitMQ/本仓 prefork Worker 测试及说明，
 四文件与模板逐字同步；另同步既有观测测试的局部 monkeypatch 故障作用域修正，生产预算不改。
 测试验证 pong 仍通但无/错队列时拒绝就绪、恢复通过、错节点/停止/断连失败、超时及安全输出。
