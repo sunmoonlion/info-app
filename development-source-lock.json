@@ -3,26 +3,26 @@
   "kind": "development-source-lock",
   "repository": "info-app",
   "formal_release": false,
-  "task": "v5-backlog-b4-luna-20260912",
-  "release_boundary": "Source-only development candidate; historical formal release and deployed images are unchanged.",
+  "task": "B7-B9-closeout-kind-20260919",
+  "release_boundary": "Immutable development candidate source; actual deployment requires the matching KIND release, prepared independent identities, and verified quiescent backup.",
   "components": [
     {
       "path": "info-backend",
-      "commit": "034b121cb00ba5889966d385de4d8f9c3697e872",
-      "tree": "439c5e676543d428985f615139c06e7239914032",
-      "remote_branch": "origin/luna/durable-delivery-20260911-local"
+      "commit": "e5156a0bfc0d5ca9118128427dcacb69697a0737",
+      "tree": "49b19f05e2635b3363046929be2a82db70433cf8",
+      "remote_branch": "origin/master"
     },
     {
       "path": "info-admin-frontend",
-      "commit": "04ae25c5503317bf2faab10988710598afe8e6c7",
-      "tree": "8837ee22dba297fef20b39b8a8de5ceb2865660b",
-      "remote_branch": "origin/luna/durable-delivery-20260911-local"
+      "commit": "90e4ab00fc209323d1670743d83ae1369a7b8d82",
+      "tree": "8d2e871b2be1c0e6f83bbeab6a4da54522dcdabd",
+      "remote_branch": "origin/master"
     },
     {
       "path": "info-web-frontend",
-      "commit": "f3ebbc3251ba2501d4e9a4fe87ff59e005d151fa",
-      "tree": "f3e0648a236152b975a384e70026d62889e54f22",
-      "remote_branch": "origin/luna/durable-delivery-20260911-local"
+      "commit": "a07af307c63ee16204d82afa0a0b7b2d3d22bb3c",
+      "tree": "dc3faaa774953855b446266d7f3f2826a78dd360",
+      "remote_branch": "origin/master"
     }
   ]
 }
