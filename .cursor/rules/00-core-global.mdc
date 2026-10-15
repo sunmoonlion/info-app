@@ -1,11 +1,11 @@
 ---
-description: info-app 架构 v2 三子模块父仓全局协作规则
+description: knowfeed-app 架构 v2 三子模块父仓全局协作规则
 alwaysApply: true
 ---
 
-# info-app 全局规则
+# knowfeed-app 全局规则
 
-- 活跃源码只允许 `info-admin-frontend`、`info-web-frontend`、`info-backend`。
+- 活跃源码只允许 `knowfeed-admin-frontend`、`knowfeed-web-frontend`、`knowfeed-backend`。
 - Admin/Web 前端共用统一 FastAPI Backend，不得重新引入独立 Web Backend。
 - Worker 代码属于统一 Backend，K8s 声明属于 k8s 仓库，父仓不得保存副本。
 - 接口、鉴权、错误码和 schema 以后端代码/OpenAPI/contract tests 为准。

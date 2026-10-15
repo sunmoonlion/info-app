@@ -1,6 +1,6 @@
 ---
-description: 用户端 Next.js（info-web-frontend）
-globs: **/info-web-frontend/**/*.{tsx,ts,jsx,js}
+description: 用户端 Next.js（knowfeed-web-frontend）
+globs: **/knowfeed-web-frontend/**/*.{tsx,ts,jsx,js}
 alwaysApply: false
 ---
 

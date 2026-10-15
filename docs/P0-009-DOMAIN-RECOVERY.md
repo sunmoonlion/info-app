@@ -11,17 +11,17 @@ dependency directories into the post-migration repositories.
 Inspect a historical file without restoring it:
 
 ```bash
-git clone https://github.com/sunmoonlion/info-web-backend.git \
-  /tmp/info-web-backend-archive
-git -C /tmp/info-web-backend-archive \
+git clone https://github.com/sunmoonlion/knowfeed-web-backend.git \
+  /tmp/knowfeed-web-backend-archive
+git -C /tmp/knowfeed-web-backend-archive \
   show p0-009a-pre-20260729:app/src/example.ts
 ```
 
 Create an isolated recovery worktree:
 
 ```bash
-git -C /tmp/info-web-backend-archive \
-  worktree add /tmp/info-web-backend-pre-p0-009 \
+git -C /tmp/knowfeed-web-backend-archive \
+  worktree add /tmp/knowfeed-web-backend-pre-p0-009 \
   p0-009a-pre-20260729
 ```
 

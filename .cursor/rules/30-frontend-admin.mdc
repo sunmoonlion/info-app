@@ -1,6 +1,6 @@
 ---
-description: 管理端 Next.js（info-admin-frontend）
-globs: **/info-admin-frontend/**/*.{tsx,ts,jsx,js}
+description: 管理端 Next.js（knowfeed-admin-frontend）
+globs: **/knowfeed-admin-frontend/**/*.{tsx,ts,jsx,js}
 alwaysApply: false
 ---
 

@@ -1,9 +1,9 @@
-[submodule "info-admin-frontend"]
-	path = info-admin-frontend
-	url = https://github.com/sunmoonlion/info-admin-frontend.git
-[submodule "info-web-frontend"]
-	path = info-web-frontend
-	url = https://github.com/sunmoonlion/info-web-frontend.git
-[submodule "info-backend"]
-	path = info-backend
-	url = https://github.com/sunmoonlion/info-backend.git
+[submodule "knowfeed-admin-frontend"]
+	path = knowfeed-admin-frontend
+	url = https://github.com/sunmoonlion/knowfeed-admin-frontend.git
+[submodule "knowfeed-web-frontend"]
+	path = knowfeed-web-frontend
+	url = https://github.com/sunmoonlion/knowfeed-web-frontend.git
+[submodule "knowfeed-backend"]
+	path = knowfeed-backend
+	url = https://github.com/sunmoonlion/knowfeed-backend.git

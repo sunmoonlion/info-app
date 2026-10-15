@@ -9,14 +9,14 @@
 
 ## 2026-09-13 B7j 回执进展（本地，未发布）
 
-最终固定检查点 `info-backend@7dafb34ca70d1f71ebc332315bf0c7584b9c3092`，模板
+最终固定检查点 `knowfeed-backend@7dafb34ca70d1f71ebc332315bf0c7584b9c3092`，模板
 `a91eb3e284ae91d4bc6b82fe567c4163cfa728f0` 修订后 255 项先过，本仓再完整
 **500 passed / 0 skipped，83.31 秒**，Ruff/Pyright 通过。修订只将 gauge 下降用例
 改为移除隔离合成回执，不假定域 Outbox 可直接删除；归档只读保护和正式逻辑不动。
 以下保留首轮候选历史；最终门禁以本段为准。
 
 模板 `tpl-backend@a37835132217d8458a7440532f07d437a4684e3b` 固定全量 255 项先通过，
-Info `info-backend@8baeefc432ca653bb670cf1fca9cbe4256c376a9` 完整
+Info `knowfeed-backend@8baeefc432ca653bb670cf1fca9cbe4256c376a9` 完整
 **500 passed / 0 skipped，83.74 秒**，Ruff/Pyright 通过。
 共享观测器增加精确已提交 Inbox 数量/最大记录时间，保留 gauge 和无回执策略；
 非有限回执使采集失败。两文件增量及四个新测试文件同步，不新增业务表或身份。
@@ -31,7 +31,7 @@ Info `info-backend@8baeefc432ca653bb670cf1fca9cbe4256c376a9` 完整
 ## 2026-09-13 B7i 本地增量（尚未发布）
 
 模板固定 `tpl-backend@ed157e41f11e5e20e6b77812890cb55d382b58f4` 全量 243 项通过后，
-Info 同步为 `info-backend@0a6675d679e59ead6153386e898aed3c1dc0825e`；固定提交
+Info 同步为 `knowfeed-backend@0a6675d679e59ead6153386e898aed3c1dc0825e`；固定提交
 Ruff/Pyright 通过，完整 **488 passed / 0 skipped，74.92 秒**。
 五个新增 Scheduler 活动/CLI/测试/说明文件逐字同步，bootstrap 仅加观察类选择。
 差异分类：Info 领域任务、handler 与调度清单保留；配置无新增差异，使用原 schedule
@@ -81,7 +81,7 @@ router”的休眠声明随能力激活改为正向检查，与指南同步；�
 | Web Frontend | 82 | 12 | 7 | 0 | 0 |
 
 清单和可复现脚本保存在接手证据目录 `handoff-durable-delivery-luna-20260911/`
-的 `info-source-alignment.json`、`audit-source-alignment.py`。清单记录候选内容，
+的 `knowfeed-source-alignment.json`、`audit-source-alignment.py`。清单记录候选内容，
 不把脏工作区 HEAD 当作完整源码版本；最终子仓提交列在父仓
 `development-source-lock.json`，其中 commit/tree 均取自干净子仓，并已推送独立开发分支。
 
@@ -102,8 +102,8 @@ router”的休眠声明随能力激活改为正向检查，与指南同步；�
 | 配置 | CELERY、SPIDER_MVP、可靠投递和构建 README | 更新排队语义、迁移回滚、实际路径和开发标签；保留领域接入文档 |
 | 暂时兼容 | 旧 delivery_outbox 服务名、drain CLI、crawl/distribution/search 任务与 worker 注册 | 委托公共层或显式拒绝旧执行；无第二套投递真源；观察窗及旧调用方清点结束后移除，不能先删回滚资产 |
 | 暂时兼容 | UUIDMixin 的 Python uuid4 默认；pyproject 中已有 E501/B008/UP046 例外 | 保留 Info 对象构造语义和既有领域 lint 基线，不更改公共投递文件；本轮未宣称完成全仓风格重构 |
-| 暂时兼容 | Redis 驱动额外 ACL SAVE；前端 TPL_SSR_* 变量名 | 保留环境持久化约定及模板脚本接口。已删除无消费者的 ADMIN_FRONTEND/WEB_FRONTEND/INFO_SSR 影子配置；不是两套生效配置 |
-| 暂时兼容 | Admin lib/info/api.ts 与 lib/info-api.ts；Web 空 Dashboard 翻译节点 | 既有 UI 存量，当前面板使用 lib/info-api.ts；本轮不以公共能力同步为由清空领域 UI，未声称已经清除所有历史未用 API |
+| 暂时兼容 | Redis 驱动额外 ACL SAVE；前端 TPL_SSR_* 变量名 | 保留环境持久化约定及模板脚本接口。已删除无消费者的 ADMIN_FRONTEND/WEB_FRONTEND/KNOWFEED_SSR 影子配置；不是两套生效配置 |
+| 暂时兼容 | Admin lib/info/api.ts 与 lib/knowfeed-api.ts；Web 空 Dashboard 翻译节点 | 既有 UI 存量，当前面板使用 lib/knowfeed-api.ts；本轮不以公共能力同步为由清空领域 UI，未声称已经清除所有历史未用 API |
 | 违规漂移（已修正） | Redis 缺少模板 resetchannels；Backend rebuild 使用 1.0.0；构建文档过时 | 同步模板频道重置；改开发标签；修正文档 |
 | 违规漂移（模板先修） | 模板/实例本地构建、推送可覆盖 1.0.0 / 2.0.0 | 模板三个组件先增加保护并验证，再同步 Info；拒绝发生在 registry/凭据访问前 |
 
@@ -140,7 +140,7 @@ Web `f3ebbc3` 已推送 `luna/durable-delivery-20260911-local`，供父仓固定
 ## 2026-09-13 B7a：公共日志增量对齐
 
 本节不改写以上 2026-09-11 历史证据。模板固定 `tpl-backend@553c36b`，
-Info 固定 `info-backend@f2c4001`；日志策略、Postgres 包装器、专项测试和说明逐字相同。
+Info 固定 `knowfeed-backend@f2c4001`；日志策略、Postgres 包装器、专项测试和说明逐字相同。
 Worker 只同步信号注册，保留 crawl/distribution/search 领域任务；此差异属领域扩展。
 无新增配置差异、临时兼容或违规漂移；没有以本次增量对齐重新宣称全仓对齐。
 
@@ -153,7 +153,7 @@ Worker 只同步信号注册，保留 crawl/distribution/search 领域任务；�
 ## 2026-09-13 B7b：API schema readiness 增量对齐
 
 模板固定 `tpl-backend@ed8d5dc` 的 107 项回归先通过；Info 固定
-`info-backend@96e3762` 全量 **320 passed / 0 skipped**（30.08 秒），Ruff/Pyright 通过。
+`knowfeed-backend@96e3762` 全量 **320 passed / 0 skipped**（30.08 秒），Ruff/Pyright 通过。
 共 4 文件：schema_readiness、测试、说明逐字同步，API factory 只加入相同健康检查增量；
 包名、路由及领域扩展保留。各 App 的期望 revision 由自身迁移链导出，不复制模板 revision。
 没有新增配置/兼容项/违规漂移；新增 19 项，真实一次性 PG 迁移/降级再升级、仅 SELECT
@@ -165,7 +165,7 @@ Info 重复创建逻辑分发的独立缺口仍待后续修复，本包不以健
 
 ## 2026-09-13 B7d：只读投递观测增量对齐
 
-模板固定 `tpl-backend@1f8941f` 的 131 项先通过；Info 固定 `info-backend@9ea1c5e`
+模板固定 `tpl-backend@1f8941f` 的 131 项先通过；Info 固定 `knowfeed-backend@9ea1c5e`
 全量 **375 passed / 0 skipped**（41.51 秒），Ruff/Pyright 通过。
 5 个新文件与模板逐字相同：delivery_metrics CLI、delivery_observation 聚合器、
 delivery_observers 扩展点、24 项专项测试及说明。实例三个 topic 来自原 handler 注册，
@@ -178,7 +178,7 @@ JSON/Prometheus text 只读输出当前账本 gauge，真实 PG/S3 和契约回�
 
 ## 2026-09-13 B7e：Worker 消费配置检查增量
 
-模板固定 `tpl-backend@5369862` 全量 167 项先通过；Info 固定 `info-backend@7755da2`
+模板固定 `tpl-backend@5369862` 全量 167 项先通过；Info 固定 `knowfeed-backend@7755da2`
 全量 **411 passed / 0 skipped**（57.14 秒），Ruff/Pyright 通过。
 消除 WSL 双重校时冲突后同提交再跑 **411 passed / 0 skipped**（54.77 秒）。
 新增 worker_readiness CLI、35 项单元、1 项真实 RabbitMQ/本仓 prefork Worker 测试及说明，
@@ -194,7 +194,7 @@ JSON/Prometheus text 只读输出当前账本 gauge，真实 PG/S3 和契约回�
 ## 2026-09-13 B7f：显式投递状态与时钟回退
 
 模板本地固定 `tpl-backend@1c5173b` 先过 176 项完整门禁，再串行 Info→Knowledge→Investment。
-本仓本地固定 `info-backend@fbb48ef` 全量 **421 passed / 0 skipped**，Ruff/Pyright 通过。
+本仓本地固定 `knowfeed-backend@fbb48ef` 全量 **421 passed / 0 skipped**，Ruff/Pyright 通过。
 公共四生产文件、9 项故障回归及说明六文件与模板 SHA-256 一致。
 新增一项调用原抓取取消场景的故障回归；领域来源锁和 handler 未改。
 没有新增配置差异、临时兼容或违规漂移；这是增量对齐，不重新声称全仓相同。

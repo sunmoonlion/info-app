@@ -1,6 +1,6 @@
 ---
-description: 统一 FastAPI Backend（info-backend）
-globs: **/info-backend/**/*.py
+description: 统一 FastAPI Backend（knowfeed-backend）
+globs: **/knowfeed-backend/**/*.py
 alwaysApply: false
 ---
 

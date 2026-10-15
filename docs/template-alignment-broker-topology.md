@@ -4,7 +4,7 @@
 `template-alignment-durable-delivery.md` 工作区增量。
 
 模板真源 `tpl-backend@44e74fe02d29616dfe636b06cc717bd9698536d9`；本仓固定候选
-`info-backend@5fb909b6a012bfa62d1002abb6deb3fd9e3dc016`。
+`knowfeed-backend@5fb909b6a012bfa62d1002abb6deb3fd9e3dc016`。
 共用门禁 `tpl-app@fb9aee86646b51fad16cc17bd3e81be919eb5591` 先在模板通过外层 33 项、
 内层 Backend 258 项零跳过，再串行推进本仓。
 

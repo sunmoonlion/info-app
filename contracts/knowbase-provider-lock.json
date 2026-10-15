@@ -1,0 +1,7 @@
+{
+  "provider": "knowbase-app",
+  "contract": "knowfeed-knowbase-artifact",
+  "major_version": 1,
+  "schema": "contracts/artifact/v1/knowfeed-knowbase-artifact.schema.json",
+  "sha256": "6cd0fa7ab60bfe27a72a0c7a59721bc7f71d514c8ccbcb2b6d07f6472eb312a5"
+}
