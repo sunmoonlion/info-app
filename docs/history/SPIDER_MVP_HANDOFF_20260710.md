@@ -97,7 +97,7 @@ k8s                  984c636
 ```text
 /home/zym/k8s/sunmoonai/app-platform/info-app/docs/info-app-spider-architecture.md
 /home/zym/k8s/sunmoonai/app-platform/info-app/docs/info-app-spider-implementation-tasks.md
-/home/zym/k8s/sunmoonai/app-platform/info-app/docs/spider-reference/
+/home/zym/k8s/docs/reference/采集与数据/spider-reference/
 ```
 
 后端运行说明：
