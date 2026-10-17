@@ -193,7 +193,7 @@ JSON/Prometheus text 只读输出当前账本 gauge，真实 PG/S3 和契约回�
 
 ## 2026-09-13 B7f：显式投递状态与时钟回退
 
-模板本地固定 `tpl-backend@1c5173b` 先过 176 项完整门禁，再串行 Info→Knowledge→Investment。
+模板本地固定 `tpl-backend@1c5173b` 先过 176 项完整门禁，再串行 Info→Knowledge→Knowbench。
 本仓本地固定 `knowfeed-backend@fbb48ef` 全量 **421 passed / 0 skipped**，Ruff/Pyright 通过。
 公共四生产文件、9 项故障回归及说明六文件与模板 SHA-256 一致。
 新增一项调用原抓取取消场景的故障回归；领域来源锁和 handler 未改。
